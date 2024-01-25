@@ -1,24 +1,35 @@
-name: 'The name of your action here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Local Cache on Self-Hosted'
+description: 'Cache dependencies and build outputs to improve workflow execution time on self hosted machine'
+author: 'Tâm Võ'
 
 # Add your action's branding here. This will appear on the GitHub Marketplace.
 branding:
   icon: 'heart'
   color: 'red'
 
-# Define your inputs here.
 inputs:
-  milliseconds:
-    description: 'Your input description here'
+  path:
+    description: 'An explicit key for versioning the cache'
     required: true
-    default: '1000'
+  action:
+    description: 'The file or folder to be cached'
+    required: false
+  cache-key:
+    description: 'The path dir will cache'
+    required: true
+  cache-dir:
+    description: 'Action will be run if not cashed yet'
+    required: true
+  working-directory:
+    description: 'working-directory'
+    required: false
 
-# Define your outputs here.
 outputs:
-  time:
-    description: 'Your output description here'
+  cache-hit:
+    description: 'A boolean value to indicate if cache was found and restored'
 
 runs:
   using: node20
-  main: dist/index.js
+  main: dist/restore.js
+  post: dist/save.js
+  post-if: success()

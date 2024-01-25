@@ -1,0 +1,65 @@
+import * as core from '@actions/core'
+import path from 'path'
+
+const has = <T extends Object>(obj: T, prop?: any) =>
+  Object.prototype.hasOwnProperty.call(obj, prop)
+
+export const isErrorLike = (err: any) => {
+  if (err instanceof Error) {
+    return true
+  }
+
+  if (
+    typeof err === 'object' &&
+    err !== null &&
+    'message' in err &&
+    has(err, 'message') &&
+    typeof err.message === 'string'
+  ) {
+    return true
+  }
+
+  return false
+}
+
+export const getMessage = (type: 'INFO' | 'ERROR', message: string) => {
+  return `===== ${type}: ${message}`
+}
+
+export const getVars = async () => {
+  const options = {
+    path: core.getInput('path'),
+    action: core.getInput('action'),
+    cacheKey: core.getInput('cache-key') || 'no-key',
+    cacheDir: core.getInput('cache-dir'),
+    workingDir: core.getInput('working-directory') || process.cwd()
+  }
+  if (!options.path) {
+    core.setFailed(
+      getMessage('ERROR', 'path is required but was not provided.')
+    )
+  }
+  if (!options.cacheKey) {
+    core.setFailed(
+      getMessage('ERROR', 'cache-key is required but was not provided.')
+    )
+  }
+  if (!options.cacheDir) {
+    core.setFailed(
+      getMessage('ERROR', 'cache-dir is required but was not provided.')
+    )
+  }
+
+  const cacheDir = options.cacheDir
+  const cachePath = path.join(cacheDir, options.cacheKey)
+  const targetPath = path.resolve(options.workingDir, options.path)
+  const targetDir = path.parse(targetPath).dir
+
+  return {
+    cacheDir,
+    cachePath,
+    options,
+    targetDir,
+    targetPath
+  }
+}
