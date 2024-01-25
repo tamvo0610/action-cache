@@ -1,5 +1,4 @@
 import * as core from '@actions/core'
-import { execSync } from 'child_process'
 import path from 'path'
 
 const has = <T extends Object>(obj: T, prop?: any) =>
@@ -35,38 +34,36 @@ export const getVars = () => {
     cacheDir: core.getInput('cache-dir'),
     workingDir: core.getInput('working-directory') || process.cwd()
   }
+
   if (!options.path) {
     core.setFailed(
       getMessage('ERROR', 'path is required but was not provided.')
     )
   }
+
   if (!options.cacheKey) {
     core.setFailed(
       getMessage('ERROR', 'cache-key is required but was not provided.')
     )
   }
+
   if (!options.cacheDir) {
     core.setFailed(
       getMessage('ERROR', 'cache-dir is required but was not provided.')
     )
   }
-  const execCacheDir = execSync(`echo ${options.cacheDir}`, {
-    encoding: 'utf-8'
-  })
-  const cachePath = path.join(options.cacheDir, options.cacheKey)
-  console.log(getMessage('INFO', `Cache Path: ${cachePath}`))
-  const cacheDir = path.parse(cachePath).dir
+
+  const cacheDir = path.join(options.cacheDir)
   console.log(getMessage('INFO', `Cache Dir: ${cacheDir}`))
-  const targetPath = path.resolve(options.workingDir, options.path)
-  console.log(getMessage('INFO', `Target Path: ${targetPath}`))
-  const targetDir = path.parse(targetPath).dir
+  const cachePath = path.join(cacheDir, options.cacheKey)
+  console.log(getMessage('INFO', `Cache Path: ${cachePath}`))
+  const targetDir = path.join(options.workingDir, options.path)
   console.log(getMessage('INFO', `Target Dir: ${targetDir}`))
 
   return {
     cachePath,
     cacheDir,
     options,
-    targetDir,
-    targetPath
+    targetDir
   }
 }

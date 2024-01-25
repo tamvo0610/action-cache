@@ -8,6 +8,7 @@ async function restore() {
   try {
     const { cachePath, cacheDir, targetDir, options } = getVars()
     const isCacheExist = await io_util.exists(cachePath)
+    console.log('cachePath', cachePath)
     console.log('isCacheExist', isCacheExist)
     if (isCacheExist) {
       console.log(getMessage('INFO', 'Cache exist at ' + cachePath))
