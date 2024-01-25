@@ -1,13 +1,15 @@
 import * as core from '@actions/core'
 import * as io_util from '@actions/io/lib/io-util.js'
 import { execSync } from 'child_process'
+import fs from 'fs'
 
 import { getVars, isErrorLike, getMessage } from './utils/actionUltis'
 
 async function restore() {
   try {
     const { cachePath, cacheDir, targetDir, options } = getVars()
-    const isCacheExist = await io_util.exists(cachePath)
+    // const isCacheExist = await io_util.exists(cachePath)
+    const isCacheExist = fs.existsSync(cachePath)
     console.log('cachePath', cachePath)
     console.log('isCacheExist', isCacheExist)
     if (isCacheExist) {
