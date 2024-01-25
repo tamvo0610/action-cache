@@ -27,7 +27,7 @@ export const getMessage = (type: 'INFO' | 'ERROR', message: string) => {
   return `===== ${type}: ${message}`
 }
 
-export const getVars = async () => {
+export const getVars = () => {
   const options = {
     path: core.getInput('path'),
     action: core.getInput('action'),

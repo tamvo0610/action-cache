@@ -6,7 +6,7 @@ import { getVars, isErrorLike, getMessage } from './utils/actionUltis'
 
 async function restore() {
   try {
-    const { cachePath, cacheDir, targetDir, options } = await getVars()
+    const { cachePath, cacheDir, targetDir, options } = getVars()
     const isCacheExist = await io_util.exists(cachePath)
     console.log('isCacheExist', isCacheExist)
     if (isCacheExist) {

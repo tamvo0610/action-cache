@@ -24927,7 +24927,7 @@ const child_process_1 = __nccwpck_require__(2081);
 const actionUltis_1 = __nccwpck_require__(8586);
 async function restore() {
     try {
-        const { cachePath, cacheDir, targetDir, options } = await (0, actionUltis_1.getVars)();
+        const { cachePath, cacheDir, targetDir, options } = (0, actionUltis_1.getVars)();
         const isCacheExist = await io_util.exists(cachePath);
         console.log('isCacheExist', isCacheExist);
         if (isCacheExist) {
@@ -25016,7 +25016,7 @@ const getMessage = (type, message) => {
     return `===== ${type}: ${message}`;
 };
 exports.getMessage = getMessage;
-const getVars = async () => {
+const getVars = () => {
     const options = {
         path: core.getInput('path'),
         action: core.getInput('action'),
