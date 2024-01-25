@@ -24996,6 +24996,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getVars = exports.getMessage = exports.isErrorLike = void 0;
 const core = __importStar(__nccwpck_require__(2186));
+const child_process_1 = __nccwpck_require__(2081);
 const path_1 = __importDefault(__nccwpck_require__(1017));
 const has = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop);
 const isErrorLike = (err) => {
@@ -25033,6 +25034,9 @@ const getVars = () => {
     if (!options.cacheDir) {
         core.setFailed((0, exports.getMessage)('ERROR', 'cache-dir is required but was not provided.'));
     }
+    const execCacheDir = (0, child_process_1.execSync)(`echo ${options.cacheDir}`, {
+        encoding: 'utf-8'
+    });
     const cachePath = path_1.default.join(options.cacheDir, options.cacheKey);
     console.log((0, exports.getMessage)('INFO', `Cache Path: ${cachePath}`));
     const cacheDir = path_1.default.parse(cachePath).dir;

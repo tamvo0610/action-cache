@@ -50,6 +50,9 @@ export const getVars = () => {
       getMessage('ERROR', 'cache-dir is required but was not provided.')
     )
   }
+  const execCacheDir = execSync(`echo ${options.cacheDir}`, {
+    encoding: 'utf-8'
+  })
   const cachePath = path.join(options.cacheDir, options.cacheKey)
   console.log(getMessage('INFO', `Cache Path: ${cachePath}`))
   const cacheDir = path.parse(cachePath).dir
