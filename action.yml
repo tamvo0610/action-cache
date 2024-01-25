@@ -1,4 +1,4 @@
-name: 'Local Cache on Self-Hosted'
+name: 'TEST Local Cache on Self-Hosted'
 description: 'Cache dependencies and build outputs to improve workflow execution time on self hosted machine'
 author: 'Tâm Võ'
 
@@ -8,7 +8,7 @@ branding:
   color: 'red'
 
 inputs:
-  path:
+  path: 
     description: 'An explicit key for versioning the cache'
     required: true
   action:
