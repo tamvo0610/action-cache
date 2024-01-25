@@ -32,6 +32,6 @@ outputs:
 
 runs:
   using: node16
-  main: source ${{ github.action_path }}/entrypoint.sh
+  main: dist/restore/index.js
   post: dist/save/index.js
   post-if: success()
