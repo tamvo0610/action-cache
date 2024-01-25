@@ -39,17 +39,19 @@ export const getVars = async () => {
       getMessage('ERROR', 'path is required but was not provided.')
     )
   }
+  console.log(getMessage('INFO', `Path: ${options.path}`))
   if (!options.cacheKey) {
     core.setFailed(
       getMessage('ERROR', 'cache-key is required but was not provided.')
     )
   }
+  console.log(getMessage('INFO', `Cache Key: ${options.cacheKey}`))
   if (!options.cacheDir) {
     core.setFailed(
       getMessage('ERROR', 'cache-dir is required but was not provided.')
     )
   }
-
+  console.log(getMessage('INFO', `Cache Dir: ${options.cacheDir}`))
   const cacheDir = options.cacheDir
   const cachePath = path.join(cacheDir, options.cacheKey)
   const targetPath = path.resolve(options.workingDir, options.path)
