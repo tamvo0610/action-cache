@@ -27,6 +27,10 @@ inputs:
 outputs:
   cache-hit:
     description: 'A boolean value to indicate if cache was found and restored'
+    default: 'false'
+  action-hit:
+    description: 'A boolean value to indicate if action was found and runned'
+    default: 'false'
 
 runs:
   using: node20

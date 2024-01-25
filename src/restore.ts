@@ -21,11 +21,11 @@ async function restore() {
     } else {
       console.log(getMessage('INFO', 'Cache not found at' + cachePath))
       if (!!options?.action) {
-        execSync(
-          `cd ${options.workingDir} && export LANG=en_US.UTF-8 && ${options.action}`,
-          { stdio: 'inherit', shell: 'true' }
-        )
-        console.log(`===== INFO: Missing action`)
+        execSync(`cd ${options.workingDir} && ${options.action}`, {
+          stdio: 'inherit',
+          shell: 'true'
+        })
+        core.setOutput('action-hit', true)
       }
       core.setOutput('cache-hit', false)
     }
