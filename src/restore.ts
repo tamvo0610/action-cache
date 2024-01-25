@@ -6,8 +6,9 @@ import { getVars, isErrorLike, getMessage } from './utils/actionUltis'
 
 async function restore() {
   try {
-    const { cachePath, targetDir, options } = await getVars()
+    const { cachePath, cacheDir, targetDir, options } = await getVars()
     const isCacheExist = await io_util.exists(cachePath)
+    console.log('isCacheExist', isCacheExist)
     if (isCacheExist) {
       console.log(getMessage('INFO', 'Cache exist at ' + cachePath))
       execSync(`mkdir -p "${targetDir}"`)
