@@ -24927,7 +24927,7 @@ const child_process_1 = __nccwpck_require__(2081);
 const actionUltis_1 = __nccwpck_require__(8586);
 async function restore() {
     try {
-        const { cachePath, cacheDir, targetDir, targetPath, options } = await (0, actionUltis_1.getVars)();
+        const { cachePath, targetDir, options } = await (0, actionUltis_1.getVars)();
         const isCacheExist = await io_util.exists(cachePath);
         if (isCacheExist) {
             console.log((0, actionUltis_1.getMessage)('INFO', 'Cache exist at ' + cachePath));
@@ -24940,10 +24940,13 @@ async function restore() {
             core.setOutput('cache-hit', true);
         }
         else {
-            console.log((0, actionUltis_1.getMessage)('INFO', 'Cache not found at' + cachePath));
+            console.log((0, actionUltis_1.getMessage)('INFO', 'Cache not found at ' + cachePath));
             if (!!options?.action) {
-                (0, child_process_1.execSync)(`cd ${options.workingDir} && export LANG=en_US.UTF-8 && ${options.action}`, { stdio: 'inherit', shell: 'true' });
-                console.log(`===== INFO: Missing action`);
+                (0, child_process_1.execSync)(`cd ${options.workingDir} && ${options.action}`, {
+                    stdio: 'inherit',
+                    shell: 'true'
+                });
+                core.setOutput('action-hit', true);
             }
             core.setOutput('cache-hit', false);
         }
@@ -24992,6 +24995,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getVars = exports.getMessage = exports.isErrorLike = void 0;
 const core = __importStar(__nccwpck_require__(2186));
+const child_process_1 = __nccwpck_require__(2081);
 const path_1 = __importDefault(__nccwpck_require__(1017));
 const has = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop);
 const isErrorLike = (err) => {
@@ -25032,12 +25036,13 @@ const getVars = async () => {
         core.setFailed((0, exports.getMessage)('ERROR', 'cache-dir is required but was not provided.'));
     }
     console.log((0, exports.getMessage)('INFO', `Cache Dir: ${options.cacheDir}`));
-    const cacheDir = options.cacheDir;
-    const cachePath = path_1.default.join(cacheDir, options.cacheKey);
+    const execCacheDir = (0, child_process_1.execSync)(`echo ${options.cacheDir}`, {
+        encoding: 'utf-8'
+    });
+    const cachePath = path_1.default.join(execCacheDir, options.cacheKey);
     const targetPath = path_1.default.resolve(options.workingDir, options.path);
     const targetDir = path_1.default.parse(targetPath).dir;
     return {
-        cacheDir,
         cachePath,
         options,
         targetDir,

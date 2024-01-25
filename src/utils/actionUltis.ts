@@ -1,4 +1,5 @@
 import * as core from '@actions/core'
+import { execSync } from 'child_process'
 import path from 'path'
 
 const has = <T extends Object>(obj: T, prop?: any) =>
@@ -52,13 +53,15 @@ export const getVars = async () => {
     )
   }
   console.log(getMessage('INFO', `Cache Dir: ${options.cacheDir}`))
-  const cacheDir = options.cacheDir
-  const cachePath = path.join(cacheDir, options.cacheKey)
+
+  const execCacheDir = execSync(`echo ${options.cacheDir}`, {
+    encoding: 'utf-8'
+  })
+  const cachePath = path.join(execCacheDir, options.cacheKey)
   const targetPath = path.resolve(options.workingDir, options.path)
   const targetDir = path.parse(targetPath).dir
 
   return {
-    cacheDir,
     cachePath,
     options,
     targetDir,

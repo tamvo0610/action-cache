@@ -6,8 +6,7 @@ import { getVars, isErrorLike, getMessage } from './utils/actionUltis'
 
 async function restore() {
   try {
-    const { cachePath, cacheDir, targetDir, targetPath, options } =
-      await getVars()
+    const { cachePath, targetDir, options } = await getVars()
     const isCacheExist = await io_util.exists(cachePath)
     if (isCacheExist) {
       console.log(getMessage('INFO', 'Cache exist at ' + cachePath))
@@ -19,7 +18,7 @@ async function restore() {
       console.log(getMessage('INFO', 'Cache restore success'))
       core.setOutput('cache-hit', true)
     } else {
-      console.log(getMessage('INFO', 'Cache not found at' + cachePath))
+      console.log(getMessage('INFO', 'Cache not found at ' + cachePath))
       if (!!options?.action) {
         execSync(`cd ${options.workingDir} && ${options.action}`, {
           stdio: 'inherit',
