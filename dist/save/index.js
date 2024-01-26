@@ -24733,7 +24733,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.save = void 0;
 const core = __importStar(__nccwpck_require__(2186));
-const child_process_1 = __nccwpck_require__(2081);
 const actionUtils_1 = __nccwpck_require__(6850);
 const logUtils_1 = __nccwpck_require__(2585);
 async function save() {
@@ -24742,9 +24741,9 @@ async function save() {
         if (isCacheExist)
             return logUtils_1.Log.info('Cache exist, skip save');
         logUtils_1.Log.info('Cache not exist, save cache');
-        (0, child_process_1.execSync)(`mkdir -p ${cachePath}`);
+        (0, actionUtils_1.execSync)(`mkdir -p ${cachePath}`);
         logUtils_1.Log.info('Create cache folder');
-        (0, child_process_1.execSync)(`rsync -a ${targetPath}/ ${cachePath}`);
+        (0, actionUtils_1.execSync)(`rsync -a ${targetPath}/ ${cachePath}`);
         logUtils_1.Log.info('Cache save success');
     }
     catch (error) {
@@ -24856,10 +24855,10 @@ const getVars = () => {
 };
 exports.getVars = getVars;
 const execSync = (str) => {
-    return (0, child_process_1.execSync)(`mkdir -p ${str}`, {
-        stdio: 'inherit',
-        shell: 'true',
-        encoding: 'utf8'
+    return (0, child_process_1.execSync)(str, {
+        shell: 'true'
+        // stdio: 'inherit',
+        // encoding: 'utf-8'
     });
 };
 exports.execSync = execSync;

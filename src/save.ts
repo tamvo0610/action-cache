@@ -1,6 +1,5 @@
 import * as core from '@actions/core'
-import { execSync } from 'child_process'
-import { getVars, isErrorLike } from './utils/actionUtils'
+import { execSync, getVars, isErrorLike } from './utils/actionUtils'
 import { Log } from './utils/logUtils'
 
 export async function save() {

@@ -78,9 +78,9 @@ export const getVars = () => {
 }
 
 export const execSync = (str: string) => {
-  return execSyncCP(`mkdir -p ${str}`, {
-    stdio: 'inherit',
-    shell: 'true',
-    encoding: 'utf8'
+  return execSyncCP(str, {
+    shell: 'true'
+    // stdio: 'inherit',
+    // encoding: 'utf-8'
   })
 }

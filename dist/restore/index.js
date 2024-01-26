@@ -24861,10 +24861,10 @@ const getVars = () => {
 };
 exports.getVars = getVars;
 const execSync = (str) => {
-    return (0, child_process_1.execSync)(`mkdir -p ${str}`, {
-        stdio: 'inherit',
-        shell: 'true',
-        encoding: 'utf8'
+    return (0, child_process_1.execSync)(str, {
+        shell: 'true'
+        // stdio: 'inherit',
+        // encoding: 'utf-8'
     });
 };
 exports.execSync = execSync;
