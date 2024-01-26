@@ -1,5 +1,5 @@
 import * as core from '@actions/core'
-import { execSync } from 'child_process'
+import { execSync as execSyncCP } from 'child_process'
 import path from 'path'
 import { Log } from './logUtils'
 
@@ -30,8 +30,7 @@ const checkCacheExist = (path: string) => {
         echo "1"; 
       else 
         echo "0"; 
-      fi`,
-    { encoding: 'utf8' }
+      fi`
   )
   return !!Number(result)
 }
@@ -75,4 +74,12 @@ export const getVars = () => {
     targetDir,
     isCacheExist
   }
+}
+
+export const execSync = (str: string) => {
+  return execSyncCP(`mkdir -p ${str}`, {
+    stdio: 'inherit',
+    shell: 'true',
+    encoding: 'utf8'
+  })
 }

@@ -24921,9 +24921,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.save = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const io_util_1 = __nccwpck_require__(1962);
-const child_process_1 = __nccwpck_require__(2081);
 const actionUtils_1 = __nccwpck_require__(6850);
 const logUtils_1 = __nccwpck_require__(2585);
 async function save() {
@@ -24931,17 +24931,19 @@ async function save() {
         const { cachePath, targetPath } = (0, actionUtils_1.getVars)();
         const isCacheExist = await (0, io_util_1.exists)(cachePath);
         if (isCacheExist)
-            return;
-        (0, child_process_1.execSync)(`mkdir -p ${cachePath}`);
-        logUtils_1.Log.info(`Create Cache Folder ${cachePath}`);
-        (0, child_process_1.execSync)(`rsync -a ${targetPath}/ ${cachePath}`);
-        logUtils_1.Log.info(`Sync Cache Folder ${targetPath} to ${cachePath}`);
+            return logUtils_1.Log.info('Cache exist, skip save');
+        logUtils_1.Log.info('Cache not exist, save cache');
+        (0, actionUtils_1.execSync)(`mkdir -p ${cachePath}`);
+        logUtils_1.Log.info('Create cache folder');
+        (0, actionUtils_1.execSync)(`rsync -a ${targetPath}/ ${cachePath}`);
+        logUtils_1.Log.info('Cache save success');
     }
     catch (error) {
         const errorMessage = (0, actionUtils_1.isErrorLike)(error) ? error.message : error;
         core.setFailed(logUtils_1.Log.error(errorMessage));
     }
 }
+exports.save = save;
 void save();
 
 
@@ -24979,7 +24981,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getVars = exports.isErrorLike = void 0;
+exports.execSync = exports.getVars = exports.isErrorLike = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const child_process_1 = __nccwpck_require__(2081);
 const path_1 = __importDefault(__nccwpck_require__(1017));
@@ -25000,11 +25002,11 @@ const isErrorLike = (err) => {
 };
 exports.isErrorLike = isErrorLike;
 const checkCacheExist = (path) => {
-    const result = (0, child_process_1.execSync)(`if [ -d "${path}" ]; then 
+    const result = (0, exports.execSync)(`if [ -d "${path}" ]; then 
         echo "1"; 
       else 
         echo "0"; 
-      fi`, { encoding: 'utf8' });
+      fi`);
     return !!Number(result);
 };
 const getVars = () => {
@@ -25043,6 +25045,14 @@ const getVars = () => {
     };
 };
 exports.getVars = getVars;
+const execSync = (str) => {
+    return (0, child_process_1.execSync)(`mkdir -p ${str}`, {
+        stdio: 'inherit',
+        shell: 'true',
+        encoding: 'utf8'
+    });
+};
+exports.execSync = execSync;
 
 
 /***/ }),
