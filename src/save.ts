@@ -1,23 +1,26 @@
-// import { setFailed } from '@actions/core'
-// import { exists } from '@actions/io/lib/io-util.js'
-// import { execSync } from 'child_process'
+import * as core from '@actions/core'
+import {
+  checkDirExist,
+  getVars,
+  isErrorLike,
+  runExec
+} from './utils/actionUtils'
+import { Log } from './utils/logUtils'
 
-// import { getVars } from './lib/getVars.js'
-// import { isErrorLike } from './lib/isErrorLike.js'
+export async function save() {
+  try {
+    const { cachePath, targetPath } = getVars()
+    const isCacheExist = await checkDirExist(cachePath)
+    if (isCacheExist) return Log.info('Cache exist, skip save')
+    Log.info('Cache not exist, save cache')
+    await runExec(`mkdir -p ${cachePath}`)
+    Log.info('Create cache folder')
+    await runExec(`rsync -a ${targetPath}/ ${cachePath}`)
+    Log.info('Cache save success')
+  } catch (error: any) {
+    const errorMessage = isErrorLike(error) ? error.message : error
+    core.setFailed(Log.error(errorMessage))
+  }
+}
 
-// async function save() {
-//   try {
-//     const { cacheDir, targetPath, cachePath } = getVars()
-//     if (await exists(cachePath)) return
-//     execSync(`mkdir -p "${cacheDir}"`)
-//     execSync(`rsync -a "${targetPath}" "${cacheDir}"`, {
-//       stdio: 'inherit',
-//       shell: true
-//     })
-//   } catch (error) {
-//     setFailed(isErrorLike(error) ? error.message : `unknown error: ${error}`)
-//     console.log(error)
-//   }
-// }
-
-// void save()
+void save()

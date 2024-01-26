@@ -1,14 +1,13 @@
-name: 'Test Local Cache on Self-Hosted'
+name: 'Self-Hosted Local Cache'
 description: 'Cache dependencies and build outputs to improve workflow execution time on self hosted machine'
 author: 'Tâm Võ'
 
-# Add your action's branding here. This will appear on the GitHub Marketplace.
 branding:
   icon: 'heart'
   color: 'red'
 
 inputs:
-  path:
+  path: 
     description: 'An explicit key for versioning the cache'
     required: true
   action:
@@ -27,13 +26,9 @@ inputs:
 outputs:
   cache-hit:
     description: 'A boolean value to indicate if cache was found and restored'
-    default: 'false'
-  action-hit:
-    description: 'A boolean value to indicate if action was found and runned'
-    default: 'false'
 
 runs:
-  using: node20
-  main: dist/restore.js
-  post: dist/save.js
+  using: node16
+  main: dist/restore/index.js
+  post: dist/save/index.js
   post-if: success()
