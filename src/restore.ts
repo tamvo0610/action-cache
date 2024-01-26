@@ -5,7 +5,8 @@ import { Log } from './utils/logUtils'
 
 async function restore() {
   try {
-    const { cachePath, targetDir, options, isCacheExist } = getVars()
+    const { cachePath, targetDir, options, checkCacheExist } = getVars()
+    const isCacheExist = await checkCacheExist(cachePath)
     if (isCacheExist) {
       Log.info('Cache exist, restore cache')
       execSync(`mkdir -p ${targetDir}`)

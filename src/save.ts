@@ -4,7 +4,8 @@ import { Log } from './utils/logUtils'
 
 export async function save() {
   try {
-    const { cachePath, targetPath, isCacheExist } = getVars()
+    const { cachePath, targetPath, checkCacheExist } = getVars()
+    const isCacheExist = await checkCacheExist(cachePath)
     if (isCacheExist) return Log.info('Cache exist, skip save')
     Log.info('Cache not exist, save cache')
     execSync(`mkdir -p ${cachePath}`)

@@ -24737,7 +24737,8 @@ const actionUtils_1 = __nccwpck_require__(6850);
 const logUtils_1 = __nccwpck_require__(2585);
 async function save() {
     try {
-        const { cachePath, targetPath, isCacheExist } = (0, actionUtils_1.getVars)();
+        const { cachePath, targetPath, checkCacheExist } = (0, actionUtils_1.getVars)();
+        const isCacheExist = await checkCacheExist(cachePath);
         if (isCacheExist)
             return logUtils_1.Log.info('Cache exist, skip save');
         logUtils_1.Log.info('Cache not exist, save cache');
@@ -24809,14 +24810,21 @@ const isErrorLike = (err) => {
     return false;
 };
 exports.isErrorLike = isErrorLike;
-const checkCacheExist = (path) => {
-    const result = (0, exports.execSync)(`if [ -d "${path}" ]; then 
-        echo "1"; 
-      else 
-        echo "0"; 
-      fi`);
-    console.log('result', result);
-    return !!Number(result);
+const checkCacheExist = async (path) => {
+    return new Promise((resolve, reject) => {
+        (0, child_process_1.exec)(`if [ -d "${path}" ]; then 
+          echo "1"; 
+        else 
+          echo "0"; 
+        fi`, (error, stdout, stderr) => {
+            if (error) {
+                console.error(`exec error: ${error}`);
+                return;
+            }
+            console.log(`stdout: ${stdout}`);
+            console.error(`stderr: ${stderr}`);
+        });
+    });
 };
 const getVars = () => {
     const options = {
@@ -24843,15 +24851,15 @@ const getVars = () => {
     logUtils_1.Log.info(`Target Path: ${targetPath}`);
     const { dir: targetDir } = path_1.default.parse(targetPath);
     logUtils_1.Log.info(`Target Dir: ${targetDir}`);
-    const isCacheExist = checkCacheExist(cachePath);
-    logUtils_1.Log.info(`Exist: ${isCacheExist}`);
+    // const isCacheExist = checkCacheExist(cachePath)
+    // Log.info(`Exist: ${isCacheExist}`)
     return {
         options,
         cachePath,
         cacheDir,
         targetPath,
         targetDir,
-        isCacheExist
+        checkCacheExist
     };
 };
 exports.getVars = getVars;

@@ -1,5 +1,5 @@
 import * as core from '@actions/core'
-import { execSync as execSyncCP } from 'child_process'
+import { execSync as execSyncCP, exec } from 'child_process'
 import path from 'path'
 import { Log } from './logUtils'
 
@@ -24,16 +24,24 @@ export const isErrorLike = (err: any) => {
   return false
 }
 
-const checkCacheExist = (path: string) => {
-  const result = execSync(
-    `if [ -d "${path}" ]; then 
-        echo "1"; 
-      else 
-        echo "0"; 
-      fi`
-  )
-  console.log('result', result)
-  return !!Number(result)
+const checkCacheExist = async (path: string) => {
+  return new Promise((resolve, reject) => {
+    exec(
+      `if [ -d "${path}" ]; then 
+          echo "1"; 
+        else 
+          echo "0"; 
+        fi`,
+      (error, stdout, stderr) => {
+        if (error) {
+          console.error(`exec error: ${error}`)
+          return
+        }
+        console.log(`stdout: ${stdout}`)
+        console.error(`stderr: ${stderr}`)
+      }
+    )
+  })
 }
 
 export const getVars = () => {
@@ -65,8 +73,8 @@ export const getVars = () => {
   Log.info(`Target Path: ${targetPath}`)
   const { dir: targetDir } = path.parse(targetPath)
   Log.info(`Target Dir: ${targetDir}`)
-  const isCacheExist = checkCacheExist(cachePath)
-  Log.info(`Exist: ${isCacheExist}`)
+  // const isCacheExist = checkCacheExist(cachePath)
+  // Log.info(`Exist: ${isCacheExist}`)
 
   return {
     options,
@@ -74,7 +82,7 @@ export const getVars = () => {
     cacheDir,
     targetPath,
     targetDir,
-    isCacheExist
+    checkCacheExist
   }
 }
 
