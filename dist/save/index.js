@@ -24737,14 +24737,14 @@ const actionUtils_1 = __nccwpck_require__(6850);
 const logUtils_1 = __nccwpck_require__(2585);
 async function save() {
     try {
-        const { cachePath, targetPath, checkCacheExist } = (0, actionUtils_1.getVars)();
-        const isCacheExist = await checkCacheExist(cachePath);
+        const { cachePath, targetPath } = (0, actionUtils_1.getVars)();
+        const isCacheExist = await (0, actionUtils_1.checkDirExist)(cachePath);
         if (isCacheExist)
             return logUtils_1.Log.info('Cache exist, skip save');
         logUtils_1.Log.info('Cache not exist, save cache');
-        (0, actionUtils_1.execSync)(`mkdir -p ${cachePath}`);
+        await (0, actionUtils_1.runExec)(`mkdir -p ${cachePath}`);
         logUtils_1.Log.info('Create cache folder');
-        (0, actionUtils_1.execSync)(`rsync -a ${targetPath}/ ${cachePath}`);
+        await (0, actionUtils_1.runExec)(`rsync -a ${targetPath}/ ${cachePath}`);
         logUtils_1.Log.info('Cache save success');
     }
     catch (error) {
@@ -24790,7 +24790,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.execSync = exports.getVars = exports.runExec = exports.isErrorLike = void 0;
+exports.execSync = exports.getVars = exports.checkDirExist = exports.runExec = exports.isErrorLike = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const child_process_1 = __nccwpck_require__(2081);
 const path_1 = __importDefault(__nccwpck_require__(1017));
@@ -24821,7 +24821,7 @@ const runExec = async (str) => {
     });
 };
 exports.runExec = runExec;
-const checkCacheExist = async (path) => {
+const checkDirExist = async (path) => {
     return new Promise((resolve, reject) => {
         (0, child_process_1.exec)(`if [ -d "${path}" ]; then 
           echo "1"; 
@@ -24838,6 +24838,7 @@ const checkCacheExist = async (path) => {
         });
     });
 };
+exports.checkDirExist = checkDirExist;
 const getVars = () => {
     const options = {
         path: core.getInput('path'),
@@ -24870,8 +24871,7 @@ const getVars = () => {
         cachePath,
         cacheDir,
         targetPath,
-        targetDir,
-        checkCacheExist
+        targetDir
     };
 };
 exports.getVars = getVars;

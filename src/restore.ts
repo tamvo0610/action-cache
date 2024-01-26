@@ -1,12 +1,16 @@
 import * as core from '@actions/core'
-import { execSync, getVars, isErrorLike, runExec } from './utils/actionUtils'
-import { save as saveCache } from './save'
+import {
+  checkDirExist,
+  getVars,
+  isErrorLike,
+  runExec
+} from './utils/actionUtils'
 import { Log } from './utils/logUtils'
 
 async function restore() {
   try {
-    const { cachePath, targetDir, options, checkCacheExist } = getVars()
-    const isCacheExist = await checkCacheExist(cachePath)
+    const { cachePath, targetDir, options } = getVars()
+    const isCacheExist = await checkDirExist(cachePath)
     if (isCacheExist) {
       Log.info('Cache exist, restore cache')
       await runExec(`mkdir -p ${targetDir}`)

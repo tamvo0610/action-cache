@@ -1,16 +1,21 @@
 import * as core from '@actions/core'
-import { execSync, getVars, isErrorLike } from './utils/actionUtils'
+import {
+  checkDirExist,
+  getVars,
+  isErrorLike,
+  runExec
+} from './utils/actionUtils'
 import { Log } from './utils/logUtils'
 
 export async function save() {
   try {
-    const { cachePath, targetPath, checkCacheExist } = getVars()
-    const isCacheExist = await checkCacheExist(cachePath)
+    const { cachePath, targetPath } = getVars()
+    const isCacheExist = await checkDirExist(cachePath)
     if (isCacheExist) return Log.info('Cache exist, skip save')
     Log.info('Cache not exist, save cache')
-    execSync(`mkdir -p ${cachePath}`)
+    await runExec(`mkdir -p ${cachePath}`)
     Log.info('Create cache folder')
-    execSync(`rsync -a ${targetPath}/ ${cachePath}`)
+    await runExec(`rsync -a ${targetPath}/ ${cachePath}`)
     Log.info('Cache save success')
   } catch (error: any) {
     const errorMessage = isErrorLike(error) ? error.message : error

@@ -1,5 +1,5 @@
 import * as core from '@actions/core'
-import { execSync as execSyncCP, exec } from 'child_process'
+import { exec, execSync as execSyncCP } from 'child_process'
 import path from 'path'
 import { Log } from './logUtils'
 
@@ -35,7 +35,7 @@ export const runExec = async (str: string): Promise<string> => {
   })
 }
 
-const checkCacheExist = async (path: string): Promise<boolean> => {
+export const checkDirExist = async (path: string): Promise<boolean> => {
   return new Promise((resolve, reject) => {
     exec(
       `if [ -d "${path}" ]; then 
@@ -93,8 +93,7 @@ export const getVars = () => {
     cachePath,
     cacheDir,
     targetPath,
-    targetDir,
-    checkCacheExist
+    targetDir
   }
 }
 
