@@ -1,13 +1,11 @@
 import * as core from '@actions/core'
-import * as io_util from '@actions/io/lib/io-util.js'
 import { execSync } from 'child_process'
 import { getVars, isErrorLike } from './utils/actionUtils'
 import { Log } from './utils/logUtils'
 
 async function restore() {
   try {
-    const { cachePath, targetDir, options } = getVars()
-    const isCacheExist = await io_util.exists(cachePath)
+    const { cachePath, targetDir, options, isCacheExist } = getVars()
     if (isCacheExist) {
       Log.info('Cache exist at ' + cachePath)
       execSync(`mkdir -p "${targetDir}"`)
