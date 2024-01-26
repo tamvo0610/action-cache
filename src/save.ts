@@ -14,6 +14,7 @@ async function save() {
       stdio: 'inherit',
       shell: 'true'
     })
+    Log.info('Cache save success')
   } catch (error: any) {
     const errorMessage = isErrorLike(error) ? error.message : error
     core.setFailed(Log.error(errorMessage))

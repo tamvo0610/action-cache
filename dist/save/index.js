@@ -24937,6 +24937,7 @@ async function save() {
             stdio: 'inherit',
             shell: 'true'
         });
+        logUtils_1.Log.info('Cache save success');
     }
     catch (error) {
         const errorMessage = (0, actionUtils_1.isErrorLike)(error) ? error.message : error;
