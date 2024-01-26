@@ -24857,9 +24857,9 @@ const getVars = () => {
 exports.getVars = getVars;
 const execSync = (str) => {
     return (0, child_process_1.execSync)(str, {
-        shell: 'true'
+        shell: 'true',
         // stdio: 'inherit',
-        // encoding: 'utf-8'
+        encoding: 'utf-8'
     });
 };
 exports.execSync = execSync;

@@ -80,8 +80,8 @@ export const getVars = () => {
 
 export const execSync = (str: string) => {
   return execSyncCP(str, {
-    shell: 'true'
+    shell: 'true',
     // stdio: 'inherit',
-    // encoding: 'utf-8'
+    encoding: 'utf-8'
   })
 }
