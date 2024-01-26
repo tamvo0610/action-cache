@@ -24842,7 +24842,7 @@ const checkDirExist = async (path) => {
             logUtils_1.Log.info('stdout: ' + stdout);
             logUtils_1.Log.info('Typeof stderr' + typeof stderr);
             logUtils_1.Log.info('stdout: ' + stderr);
-            if (stdout === '1') {
+            if (stdout == '1') {
                 return resolve(true);
             }
             resolve(false);
