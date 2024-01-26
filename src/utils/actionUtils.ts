@@ -48,7 +48,7 @@ export const checkDirExist = async (path: string): Promise<boolean> => {
           Log.info('ERROR: error.message')
           return reject(error.message)
         }
-        Log.info('Typeof stdout' + typeof stdout)
+        Log.info(`Typeof stdout ${typeof stdout}`)
         Log.info('stdout: ' + stdout)
         Log.info('Typeof stderr' + typeof stderr)
         Log.info('stdout: ' + stderr)

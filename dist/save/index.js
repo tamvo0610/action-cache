@@ -24832,7 +24832,7 @@ const checkDirExist = async (path) => {
                 logUtils_1.Log.info('ERROR: error.message');
                 return reject(error.message);
             }
-            logUtils_1.Log.info('Typeof stdout' + typeof stdout);
+            logUtils_1.Log.info(`Typeof stdout ${typeof stdout}`);
             logUtils_1.Log.info('stdout: ' + stdout);
             logUtils_1.Log.info('Typeof stderr' + typeof stderr);
             logUtils_1.Log.info('stdout: ' + stderr);
