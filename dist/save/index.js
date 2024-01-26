@@ -24829,10 +24829,12 @@ const checkDirExist = async (path) => {
           echo "0"; 
         fi`, (error, stdout) => {
             if (error) {
+                logUtils_1.Log.info('ERROR: error.message');
                 return reject(error.message);
             }
+            logUtils_1.Log.info('Typeof stdout' + typeof stdout);
+            logUtils_1.Log.info('stdout: error.message' + stdout);
             if (stdout === '1') {
-                console.log('stdout', stdout);
                 return resolve(true);
             }
             resolve(false);
