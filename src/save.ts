@@ -14,11 +14,10 @@ async function save() {
     if (isCacheExist) return
     execSync(`mkdir -p "${cachePath}"`)
     Log.info(`Create Cache Folder ${cachePath}`)
-    await cp(targetPath, cachePath, {
-      copySourceDirectory: true,
-      recursive: true
+    execSync(`rsync -a "${targetPath}/" "${cachePath}"`, {
+      stdio: 'inherit',
+      shell: 'true'
     })
-
     Log.info(`Sync Cache Folder ${targetPath} to ${cachePath}`)
   } catch (error: any) {
     const errorMessage = isErrorLike(error) ? error.message : error
