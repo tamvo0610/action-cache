@@ -24937,9 +24937,11 @@ async function save() {
         if (isCacheExist)
             return;
         logUtils_1.Log.info('Create Cache Folder');
-        await io_util.mkdir(path_1.default.join(cacheDir, options.cacheDir));
+        await io_util.mkdir(path_1.default.join(cacheDir, options.cacheKey), {
+            recursive: true
+        });
         logUtils_1.Log.info('Sync Cache Folder');
-        await io_util.copyFile(targetDir, path_1.default.join(cacheDir, options.cacheDir));
+        await io_util.copyFile(targetDir, path_1.default.join(cacheDir, options.cacheKey));
         // execSync(`mkdir -p "${cachePath}"`)
         // execSync(`rsync -a "${targetDir}/" "${cachePath}"`, {
         //   stdio: 'inherit',

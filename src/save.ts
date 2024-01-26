@@ -12,9 +12,11 @@ async function save() {
     Log.info(`isCacheExist: ${isCacheExist}`)
     if (isCacheExist) return
     Log.info('Create Cache Folder')
-    await io_util.mkdir(path.join(cacheDir, options.cacheDir))
+    await io_util.mkdir(path.join(cacheDir, options.cacheKey), {
+      recursive: true
+    })
     Log.info('Sync Cache Folder')
-    await io_util.copyFile(targetDir, path.join(cacheDir, options.cacheDir))
+    await io_util.copyFile(targetDir, path.join(cacheDir, options.cacheKey))
     // execSync(`mkdir -p "${cachePath}"`)
     // execSync(`rsync -a "${targetDir}/" "${cachePath}"`, {
     //   stdio: 'inherit',
