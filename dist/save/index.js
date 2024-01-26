@@ -25232,14 +25232,14 @@ const io_1 = __nccwpck_require__(7436);
 const io_util_1 = __nccwpck_require__(1962);
 const actionUtils_1 = __nccwpck_require__(6850);
 const logUtils_1 = __nccwpck_require__(2585);
+const child_process_1 = __nccwpck_require__(2081);
 async function save() {
     try {
         const { cachePath, targetPath } = (0, actionUtils_1.getVars)();
         const isCacheExist = await (0, io_util_1.exists)(cachePath);
-        logUtils_1.Log.info(`isCacheExist: ${isCacheExist}`);
         if (isCacheExist)
             return;
-        await (0, io_1.mkdirP)(cachePath);
+        (0, child_process_1.execSync)(`mkdir -p "${cachePath}"`);
         logUtils_1.Log.info(`Create Cache Folder ${cachePath}`);
         await (0, io_1.cp)(targetPath, cachePath, {
             copySourceDirectory: true,
@@ -25388,6 +25388,14 @@ module.exports = require("async_hooks");
 
 "use strict";
 module.exports = require("buffer");
+
+/***/ }),
+
+/***/ 2081:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("child_process");
 
 /***/ }),
 

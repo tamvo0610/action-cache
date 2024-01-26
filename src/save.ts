@@ -5,19 +5,20 @@ import { getVars, isErrorLike } from './utils/actionUtils'
 import * as fs from 'fs'
 import { Log } from './utils/logUtils'
 import path from 'path'
+import { execSync } from 'child_process'
 
 async function save() {
   try {
     const { cachePath, targetPath } = getVars()
     const isCacheExist = await exists(cachePath)
-    Log.info(`isCacheExist: ${isCacheExist}`)
     if (isCacheExist) return
-    await mkdirP(cachePath)
+    execSync(`mkdir -p "${cachePath}"`)
     Log.info(`Create Cache Folder ${cachePath}`)
     await cp(targetPath, cachePath, {
       copySourceDirectory: true,
       recursive: true
     })
+
     Log.info(`Sync Cache Folder ${targetPath} to ${cachePath}`)
   } catch (error: any) {
     const errorMessage = isErrorLike(error) ? error.message : error
