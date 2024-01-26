@@ -50,6 +50,7 @@ export const checkDirExist = async (path: string): Promise<boolean> => {
         }
         Log.info(`Typeof stdout ${typeof stdout}`)
         Log.info(`stdout: ${stdout}`)
+        Log.info(`TEST 1 ${stdout.trim() === '1'}`)
         Log.info(`WDWDWDWDQ ${stdout.includes('1')}`)
         if (stdout == '1') {
           return resolve(true)

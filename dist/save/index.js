@@ -24835,6 +24835,7 @@ const checkDirExist = async (path) => {
             }
             logUtils_1.Log.info(`Typeof stdout ${typeof stdout}`);
             logUtils_1.Log.info(`stdout: ${stdout}`);
+            logUtils_1.Log.info(`TEST 1 ${stdout.trim() === '1'}`);
             logUtils_1.Log.info(`WDWDWDWDQ ${stdout.includes('1')}`);
             if (stdout == '1') {
                 return resolve(true);
