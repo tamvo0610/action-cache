@@ -32,6 +32,7 @@ const checkCacheExist = (path: string) => {
         echo "0"; 
       fi`
   )
+  console.log('result', result)
   return !!Number(result)
 }
 

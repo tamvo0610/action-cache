@@ -24821,6 +24821,7 @@ const checkCacheExist = (path) => {
       else 
         echo "0"; 
       fi`);
+    console.log('result', result);
     return !!Number(result);
 };
 const getVars = () => {
