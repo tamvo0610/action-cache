@@ -24932,12 +24932,10 @@ async function save() {
         const isCacheExist = await (0, io_util_1.exists)(cachePath);
         if (isCacheExist)
             return;
-        (0, child_process_1.execSync)(`mkdir -p "${cachePath}"`);
+        (0, child_process_1.execSync)(`mkdir -p ${cachePath}`);
         logUtils_1.Log.info(`Create Cache Folder ${cachePath}`);
-        (0, child_process_1.execSync)(`rsync -a "${targetPath}/" "${cachePath}"`, {
-            stdio: 'inherit',
-            shell: 'true'
-        });
+        (0, child_process_1.execSync)(`cd ${targetPath} && ls`);
+        (0, child_process_1.execSync)(`rsync -a ${targetPath}/ ${cachePath}`);
         logUtils_1.Log.info(`Sync Cache Folder ${targetPath} to ${cachePath}`);
     }
     catch (error) {

@@ -12,12 +12,10 @@ async function save() {
     const { cachePath, targetPath } = getVars()
     const isCacheExist = await exists(cachePath)
     if (isCacheExist) return
-    execSync(`mkdir -p "${cachePath}"`)
+    execSync(`mkdir -p ${cachePath}`)
     Log.info(`Create Cache Folder ${cachePath}`)
-    execSync(`rsync -a "${targetPath}/" "${cachePath}"`, {
-      stdio: 'inherit',
-      shell: 'true'
-    })
+    execSync(`cd ${targetPath} && ls`)
+    execSync(`rsync -a ${targetPath}/ ${cachePath}`)
     Log.info(`Sync Cache Folder ${targetPath} to ${cachePath}`)
   } catch (error: any) {
     const errorMessage = isErrorLike(error) ? error.message : error
