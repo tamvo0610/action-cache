@@ -8,12 +8,15 @@ async function save() {
   try {
     const { cachePath, cacheDir, targetDir } = getVars()
     const isCacheExist = await io_util.exists(cachePath)
+    Log.info(`isCacheExist: ${isCacheExist}`)
     if (isCacheExist) return
-    execSync(`mkdir -p "${cacheDir}"`)
-    execSync(`rsync -a "${targetDir}/" "${cachePath}"`, {
-      stdio: 'inherit',
-      shell: 'true'
-    })
+    await io_util.mkdir(cachePath)
+    await io_util.copyFile(targetDir, cachePath)
+    // execSync(`mkdir -p "${cachePath}"`)
+    // execSync(`rsync -a "${targetDir}/" "${cachePath}"`, {
+    //   stdio: 'inherit',
+    //   shell: 'true'
+    // })
     Log.info('Cache save success')
   } catch (error: any) {
     const errorMessage = isErrorLike(error) ? error.message : error

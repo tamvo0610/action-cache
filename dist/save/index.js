@@ -24923,20 +24923,22 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const io_util = __importStar(__nccwpck_require__(1962));
-const child_process_1 = __nccwpck_require__(2081);
 const actionUtils_1 = __nccwpck_require__(6850);
 const logUtils_1 = __nccwpck_require__(2585);
 async function save() {
     try {
         const { cachePath, cacheDir, targetDir } = (0, actionUtils_1.getVars)();
         const isCacheExist = await io_util.exists(cachePath);
+        logUtils_1.Log.info(`isCacheExist: ${isCacheExist}`);
         if (isCacheExist)
             return;
-        (0, child_process_1.execSync)(`mkdir -p "${cacheDir}"`);
-        (0, child_process_1.execSync)(`rsync -a "${targetDir}/" "${cachePath}"`, {
-            stdio: 'inherit',
-            shell: 'true'
-        });
+        await io_util.mkdir(cachePath);
+        await io_util.copyFile(targetDir, cachePath);
+        // execSync(`mkdir -p "${cachePath}"`)
+        // execSync(`rsync -a "${targetDir}/" "${cachePath}"`, {
+        //   stdio: 'inherit',
+        //   shell: 'true'
+        // })
         logUtils_1.Log.info('Cache save success');
     }
     catch (error) {
@@ -25077,14 +25079,6 @@ module.exports = require("async_hooks");
 
 "use strict";
 module.exports = require("buffer");
-
-/***/ }),
-
-/***/ 2081:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("child_process");
 
 /***/ }),
 
