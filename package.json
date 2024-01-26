@@ -1,12 +1,12 @@
 {
-  "name": "local-cache",
+  "name": "action-cache",
   "description": "Local Cache on Self-Hosted",
   "version": "0.0.0",
   "author": "",
   "private": true,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tamvo0610/ts-local-cache.git"
+    "url": "git+https://github.com/tamvo0610/action-cache.git"
   },
   "keywords": [
     "actions",
