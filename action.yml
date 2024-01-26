@@ -2,7 +2,6 @@ name: 'TEST Local Cache on Self-Hosted'
 description: 'Cache dependencies and build outputs to improve workflow execution time on self hosted machine'
 author: 'Tâm Võ'
 
-# Add your action's branding here. This will appear on the GitHub Marketplace.
 branding:
   icon: 'heart'
   color: 'red'
