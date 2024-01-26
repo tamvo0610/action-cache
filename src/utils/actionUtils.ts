@@ -26,10 +26,14 @@ export const isErrorLike = (err: any) => {
 
 const checkCacheExist = (path: string) => {
   const dqwdqw = execSync(
-    `if [ -d "${path}" ]; then echo "1"; else echo "0"; fi`,
+    `if [ -d "${path}" ]; then 
+        echo "1"; 
+      else 
+        echo "0"; 
+      fi`,
     { encoding: 'utf8' }
   )
-  console.log('dqwdqw', dqwdqw)
+  Log.info(`Test: ${dqwdqw}`)
 }
 
 export const getVars = () => {

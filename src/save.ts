@@ -8,9 +8,6 @@ async function save() {
   try {
     const { cachePath, targetPath } = getVars()
     const isCacheExist = await exists(cachePath)
-    const dqwdqw = execSync(`test -d ${cachePath}`)
-    const isExist = execSync(`echo $?`).toString()
-    Log.info(isExist)
     if (isCacheExist) return
     execSync(`mkdir -p ${cachePath}`)
     Log.info(`Create Cache Folder ${cachePath}`)

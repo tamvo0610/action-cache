@@ -25015,8 +25015,12 @@ const isErrorLike = (err) => {
 };
 exports.isErrorLike = isErrorLike;
 const checkCacheExist = (path) => {
-    const dqwdqw = (0, child_process_1.execSync)(`if [ -d "${path}" ]; then echo "1"; else echo "0"; fi`, { encoding: 'utf8' });
-    console.log('dqwdqw', dqwdqw);
+    const dqwdqw = (0, child_process_1.execSync)(`if [ -d "${path}" ]; then 
+        echo "1"; 
+      else 
+        echo "0"; 
+      fi`, { encoding: 'utf8' });
+    logUtils_1.Log.info(`Test: ${dqwdqw}`);
 };
 const getVars = () => {
     const options = {
