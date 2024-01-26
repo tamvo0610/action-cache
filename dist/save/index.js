@@ -24934,7 +24934,7 @@ async function save() {
             return;
         (0, child_process_1.execSync)(`mkdir -p ${cachePath}`);
         logUtils_1.Log.info(`Create Cache Folder ${cachePath}`);
-        (0, child_process_1.execSync)(`cd ${targetPath} && ls`);
+        // execSync(`cd ${targetPath} && ls`)
         (0, child_process_1.execSync)(`rsync -a ${targetPath}/ ${cachePath}`);
         logUtils_1.Log.info(`Sync Cache Folder ${targetPath} to ${cachePath}`);
     }
