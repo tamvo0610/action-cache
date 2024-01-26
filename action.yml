@@ -1,4 +1,4 @@
-name: 'TEST Local Cache on Self-Hosted'
+name: 'Self-Hosted Local Cache'
 description: 'Cache dependencies and build outputs to improve workflow execution time on self hosted machine'
 author: 'Tâm Võ'
 
