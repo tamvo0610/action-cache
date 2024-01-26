@@ -13,7 +13,7 @@ build:
       uses: actions/checkout@v3
 
     - name: Cache Pods
-      uses: tamvo0610/actions-cache@v1
+      uses: tamvo0610/action-cache@v1
       with:
         path: 'ios/Podfile.lock'
         cache-key : pods-${{ hashFiles('ios/Podfile.lock') }}
