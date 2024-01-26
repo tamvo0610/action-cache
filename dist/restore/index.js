@@ -24987,6 +24987,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.save = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const io_util_1 = __nccwpck_require__(1962);
+const child_process_1 = __nccwpck_require__(2081);
 const actionUtils_1 = __nccwpck_require__(6850);
 const logUtils_1 = __nccwpck_require__(2585);
 async function save() {
@@ -24996,9 +24997,9 @@ async function save() {
         if (isCacheExist)
             return logUtils_1.Log.info('Cache exist, skip save');
         logUtils_1.Log.info('Cache not exist, save cache');
-        (0, actionUtils_1.execSync)(`mkdir -p ${cachePath}`);
+        (0, child_process_1.execSync)(`mkdir -p ${cachePath}`);
         logUtils_1.Log.info('Create cache folder');
-        (0, actionUtils_1.execSync)(`rsync -a ${targetPath}/ ${cachePath}`);
+        (0, child_process_1.execSync)(`rsync -a ${targetPath}/ ${cachePath}`);
         logUtils_1.Log.info('Cache save success');
     }
     catch (error) {
@@ -25098,6 +25099,7 @@ const getVars = () => {
     const { dir: targetDir } = path_1.default.parse(targetPath);
     logUtils_1.Log.info(`Target Dir: ${targetDir}`);
     const isCacheExist = checkCacheExist(cachePath);
+    logUtils_1.Log.info(`Exist: ${isCacheExist}`);
     return {
         options,
         cachePath,
