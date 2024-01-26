@@ -24816,13 +24816,14 @@ const checkCacheExist = async (path) => {
           echo "1"; 
         else 
           echo "0"; 
-        fi`, (error, stdout, stderr) => {
+        fi`, (error, stdout) => {
             if (error) {
-                console.error(`exec error: ${error}`);
-                return;
+                return reject(error.message);
             }
-            console.log(`stdout: ${stdout}`);
-            console.error(`stderr: ${stderr}`);
+            if (stdout === '1') {
+                return resolve(true);
+            }
+            resolve(false);
         });
     });
 };

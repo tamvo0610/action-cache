@@ -32,13 +32,14 @@ const checkCacheExist = async (path: string) => {
         else 
           echo "0"; 
         fi`,
-      (error, stdout, stderr) => {
+      (error, stdout) => {
         if (error) {
-          console.error(`exec error: ${error}`)
-          return
+          return reject(error.message)
         }
-        console.log(`stdout: ${stdout}`)
-        console.error(`stderr: ${stderr}`)
+        if (stdout === '1') {
+          return resolve(true)
+        }
+        resolve(false)
       }
     )
   })
