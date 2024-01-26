@@ -1,5 +1,5 @@
 import * as core from '@actions/core'
-import { execSync, getVars, isErrorLike } from './utils/actionUtils'
+import { execSync, getVars, isErrorLike, runExec } from './utils/actionUtils'
 import { save as saveCache } from './save'
 import { Log } from './utils/logUtils'
 
@@ -9,15 +9,15 @@ async function restore() {
     const isCacheExist = await checkCacheExist(cachePath)
     if (isCacheExist) {
       Log.info('Cache exist, restore cache')
-      execSync(`mkdir -p ${targetDir}`)
+      await runExec(`mkdir -p ${targetDir}`)
       Log.info('Create target folder')
-      execSync(`rsync -a ${cachePath}/ ${targetDir}`)
+      await runExec(`rsync -a ${cachePath}/ ${targetDir}`)
       Log.info('Cache restore success')
       core.setOutput('cache-hit', true)
     } else {
       Log.info('Cache not exist, skip restore')
       if (!!options?.action) {
-        execSync(`cd ${options.workingDir} && ${options.action}`)
+        await runExec(`cd ${options.workingDir} && ${options.action}`)
       }
       core.setOutput('cache-hit', false)
     }

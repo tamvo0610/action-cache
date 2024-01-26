@@ -24,7 +24,18 @@ export const isErrorLike = (err: any) => {
   return false
 }
 
-const checkCacheExist = async (path: string) => {
+export const runExec = async (str: string): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    exec(str, (error, stdout) => {
+      if (error) {
+        return reject(error.message)
+      }
+      resolve(stdout)
+    })
+  })
+}
+
+const checkCacheExist = async (path: string): Promise<boolean> => {
   return new Promise((resolve, reject) => {
     exec(
       `if [ -d "${path}" ]; then 

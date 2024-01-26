@@ -24790,7 +24790,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.execSync = exports.getVars = exports.isErrorLike = void 0;
+exports.execSync = exports.getVars = exports.runExec = exports.isErrorLike = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const child_process_1 = __nccwpck_require__(2081);
 const path_1 = __importDefault(__nccwpck_require__(1017));
@@ -24810,6 +24810,17 @@ const isErrorLike = (err) => {
     return false;
 };
 exports.isErrorLike = isErrorLike;
+const runExec = async (str) => {
+    return new Promise((resolve, reject) => {
+        (0, child_process_1.exec)(str, (error, stdout) => {
+            if (error) {
+                return reject(error.message);
+            }
+            resolve(stdout);
+        });
+    });
+};
+exports.runExec = runExec;
 const checkCacheExist = async (path) => {
     return new Promise((resolve, reject) => {
         (0, child_process_1.exec)(`if [ -d "${path}" ]; then 

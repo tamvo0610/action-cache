@@ -24740,16 +24740,16 @@ async function restore() {
         const isCacheExist = await checkCacheExist(cachePath);
         if (isCacheExist) {
             logUtils_1.Log.info('Cache exist, restore cache');
-            (0, actionUtils_1.execSync)(`mkdir -p ${targetDir}`);
+            await (0, actionUtils_1.runExec)(`mkdir -p ${targetDir}`);
             logUtils_1.Log.info('Create target folder');
-            (0, actionUtils_1.execSync)(`rsync -a ${cachePath}/ ${targetDir}`);
+            await (0, actionUtils_1.runExec)(`rsync -a ${cachePath}/ ${targetDir}`);
             logUtils_1.Log.info('Cache restore success');
             core.setOutput('cache-hit', true);
         }
         else {
             logUtils_1.Log.info('Cache not exist, skip restore');
             if (!!options?.action) {
-                (0, actionUtils_1.execSync)(`cd ${options.workingDir} && ${options.action}`);
+                await (0, actionUtils_1.runExec)(`cd ${options.workingDir} && ${options.action}`);
             }
             core.setOutput('cache-hit', false);
         }
@@ -24796,7 +24796,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.execSync = exports.getVars = exports.isErrorLike = void 0;
+exports.execSync = exports.getVars = exports.runExec = exports.isErrorLike = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const child_process_1 = __nccwpck_require__(2081);
 const path_1 = __importDefault(__nccwpck_require__(1017));
@@ -24816,6 +24816,17 @@ const isErrorLike = (err) => {
     return false;
 };
 exports.isErrorLike = isErrorLike;
+const runExec = async (str) => {
+    return new Promise((resolve, reject) => {
+        (0, child_process_1.exec)(str, (error, stdout) => {
+            if (error) {
+                return reject(error.message);
+            }
+            resolve(stdout);
+        });
+    });
+};
+exports.runExec = runExec;
 const checkCacheExist = async (path) => {
     return new Promise((resolve, reject) => {
         (0, child_process_1.exec)(`if [ -d "${path}" ]; then 
