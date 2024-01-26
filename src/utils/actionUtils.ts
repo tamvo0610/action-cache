@@ -44,17 +44,20 @@ export const getVars = () => {
     core.setFailed(Log.error('cache-dir is required but was not provided.'))
   }
 
-  const cacheDir = path.join(options.cacheDir)
-  Log.info(`Cache Dir: ${cacheDir}`)
-  const cachePath = path.join(cacheDir, options.cacheKey)
+  const cachePath = path.join(options.cacheDir, options.cacheKey)
   Log.info(`Cache Path: ${cachePath}`)
-  const targetDir = path.join(options.workingDir, options.path)
+  const { dir: cacheDir } = path.parse(cachePath)
+  Log.info(`Cache Dir: ${cacheDir}`)
+  const targetPath = path.join(options.workingDir, options.path)
+  Log.info(`Target Path: ${targetPath}`)
+  const { dir: targetDir } = path.parse(targetPath)
   Log.info(`Target Dir: ${targetDir}`)
 
   return {
+    options,
     cachePath,
     cacheDir,
-    options,
+    targetPath,
     targetDir
   }
 }

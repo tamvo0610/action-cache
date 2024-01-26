@@ -25030,16 +25030,19 @@ const getVars = () => {
     if (!options.cacheDir) {
         core.setFailed(logUtils_1.Log.error('cache-dir is required but was not provided.'));
     }
-    const cacheDir = path_1.default.join(options.cacheDir);
-    logUtils_1.Log.info(`Cache Dir: ${cacheDir}`);
-    const cachePath = path_1.default.join(cacheDir, options.cacheKey);
+    const cachePath = path_1.default.join(options.cacheDir, options.cacheKey);
     logUtils_1.Log.info(`Cache Path: ${cachePath}`);
-    const targetDir = path_1.default.join(options.workingDir, options.path);
+    const { dir: cacheDir } = path_1.default.parse(cachePath);
+    logUtils_1.Log.info(`Cache Dir: ${cacheDir}`);
+    const targetPath = path_1.default.join(options.workingDir, options.path);
+    logUtils_1.Log.info(`Target Path: ${targetPath}`);
+    const { dir: targetDir } = path_1.default.parse(targetPath);
     logUtils_1.Log.info(`Target Dir: ${targetDir}`);
     return {
+        options,
         cachePath,
         cacheDir,
-        options,
+        targetPath,
         targetDir
     };
 };
