@@ -24930,8 +24930,9 @@ async function save() {
     try {
         const { cachePath, targetPath } = (0, actionUtils_1.getVars)();
         const isCacheExist = await (0, io_util_1.exists)(cachePath);
-        const dqwdqw = (0, child_process_1.execSync)(`test -d ${cachePath} && echo $?`).toString();
-        logUtils_1.Log.info(dqwdqw);
+        const dqwdqw = (0, child_process_1.execSync)(`test -d ${cachePath}`);
+        const isExist = (0, child_process_1.execSync)(`echo $?`).toString();
+        logUtils_1.Log.info(isExist);
         if (isCacheExist)
             return;
         (0, child_process_1.execSync)(`mkdir -p ${cachePath}`);
@@ -24985,6 +24986,7 @@ exports.getVars = exports.isErrorLike = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const path_1 = __importDefault(__nccwpck_require__(1017));
 const logUtils_1 = __nccwpck_require__(2585);
+const child_process_1 = __nccwpck_require__(2081);
 const has = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop);
 const isErrorLike = (err) => {
     if (err instanceof Error) {
@@ -25000,6 +25002,10 @@ const isErrorLike = (err) => {
     return false;
 };
 exports.isErrorLike = isErrorLike;
+const checkCacheExist = (path) => {
+    const dqwdqw = (0, child_process_1.execSync)(`if [ -d "${path}" ]; then echo "1"; else echo "0"; fi`, { encoding: 'utf8' });
+    console.log('dqwdqw', dqwdqw);
+};
 const getVars = () => {
     const options = {
         path: core.getInput('path'),
@@ -25025,6 +25031,7 @@ const getVars = () => {
     logUtils_1.Log.info(`Target Path: ${targetPath}`);
     const { dir: targetDir } = path_1.default.parse(targetPath);
     logUtils_1.Log.info(`Target Dir: ${targetDir}`);
+    checkCacheExist(cachePath);
     return {
         options,
         cachePath,

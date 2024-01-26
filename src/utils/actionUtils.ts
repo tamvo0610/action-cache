@@ -1,6 +1,7 @@
 import * as core from '@actions/core'
 import path from 'path'
 import { Log } from './logUtils'
+import { execSync } from 'child_process'
 
 const has = <T extends Object>(obj: T, prop?: any) =>
   Object.prototype.hasOwnProperty.call(obj, prop)
@@ -21,6 +22,14 @@ export const isErrorLike = (err: any) => {
   }
 
   return false
+}
+
+const checkCacheExist = (path: string) => {
+  const dqwdqw = execSync(
+    `if [ -d "${path}" ]; then echo "1"; else echo "0"; fi`,
+    { encoding: 'utf8' }
+  )
+  console.log('dqwdqw', dqwdqw)
 }
 
 export const getVars = () => {
@@ -52,6 +61,8 @@ export const getVars = () => {
   Log.info(`Target Path: ${targetPath}`)
   const { dir: targetDir } = path.parse(targetPath)
   Log.info(`Target Dir: ${targetDir}`)
+
+  checkCacheExist(cachePath)
 
   return {
     options,
