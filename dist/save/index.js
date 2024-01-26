@@ -24920,15 +24920,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const io_util = __importStar(__nccwpck_require__(1962));
 const actionUtils_1 = __nccwpck_require__(6850);
+const fs = __importStar(__nccwpck_require__(7147));
 const logUtils_1 = __nccwpck_require__(2585);
-const path_1 = __importDefault(__nccwpck_require__(1017));
 async function save() {
     try {
         const { cachePath, cacheDir, targetDir, options } = (0, actionUtils_1.getVars)();
@@ -24936,12 +24933,15 @@ async function save() {
         logUtils_1.Log.info(`isCacheExist: ${isCacheExist}`);
         if (isCacheExist)
             return;
-        logUtils_1.Log.info('Create Cache Folder');
-        await io_util.mkdir(path_1.default.join(cacheDir, options.cacheKey), {
+        fs.mkdirSync(cachePath, {
             recursive: true
         });
-        logUtils_1.Log.info('Sync Cache Folder');
-        await io_util.copyFile(targetDir, path_1.default.join(cacheDir, options.cacheKey));
+        logUtils_1.Log.info(`Create Cache Folder ${cachePath}`);
+        fs.cpSync(targetDir, cachePath, {
+            recursive: true
+        });
+        // await io_util.copyFile(targetDir, path.join(cacheDir, options.cacheKey))
+        logUtils_1.Log.info(`Sync Cache Folder ${targetDir} to ${cachePath}`);
         // execSync(`mkdir -p "${cachePath}"`)
         // execSync(`rsync -a "${targetDir}/" "${cachePath}"`, {
         //   stdio: 'inherit',
