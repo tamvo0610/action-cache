@@ -17,7 +17,6 @@ async function restore() {
       Log.info('Cache not exist, skip restore')
       if (!!options?.action) {
         execSync(`cd ${options.workingDir} && ${options.action}`)
-        saveCache()
       }
       core.setOutput('cache-hit', false)
     }
