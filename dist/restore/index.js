@@ -24839,10 +24839,10 @@ const checkDirExist = async (path) => {
                 return reject(error.message);
             }
             logUtils_1.Log.info(`Typeof stdout ${typeof stdout}`);
-            logUtils_1.Log.info('stdout: ' + stdout);
+            logUtils_1.Log.info(`stdout: ${stdout}`);
             logUtils_1.Log.info('Typeof stderr' + typeof stderr);
             logUtils_1.Log.info('stdout: ' + stderr);
-            logUtils_1.Log.info(`WDWDWDWDQ ${stdout == '1'}`);
+            logUtils_1.Log.info(`WDWDWDWDQ ${stdout.toString() === '1'}`);
             if (stdout == '1') {
                 return resolve(true);
             }
