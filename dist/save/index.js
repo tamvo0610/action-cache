@@ -24739,7 +24739,6 @@ async function save() {
     try {
         const { cachePath, targetPath } = (0, actionUtils_1.getVars)();
         const isCacheExist = await (0, actionUtils_1.checkDirExist)(cachePath);
-        logUtils_1.Log.info(`CACHE EXIST ${isCacheExist}`);
         if (isCacheExist)
             return logUtils_1.Log.info('Cache exist, skip save');
         logUtils_1.Log.info('Cache not exist, save cache');
@@ -24865,8 +24864,6 @@ const getVars = () => {
     logUtils_1.Log.info(`Target Path: ${targetPath}`);
     const { dir: targetDir } = path_1.default.parse(targetPath);
     logUtils_1.Log.info(`Target Dir: ${targetDir}`);
-    // const isCacheExist = checkCacheExist(cachePath)
-    // Log.info(`Exist: ${isCacheExist}`)
     return {
         options,
         cachePath,

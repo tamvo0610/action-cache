@@ -24870,8 +24870,6 @@ const getVars = () => {
     logUtils_1.Log.info(`Target Path: ${targetPath}`);
     const { dir: targetDir } = path_1.default.parse(targetPath);
     logUtils_1.Log.info(`Target Dir: ${targetDir}`);
-    // const isCacheExist = checkCacheExist(cachePath)
-    // Log.info(`Exist: ${isCacheExist}`)
     return {
         options,
         cachePath,

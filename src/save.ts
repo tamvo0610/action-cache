@@ -11,7 +11,6 @@ export async function save() {
   try {
     const { cachePath, targetPath } = getVars()
     const isCacheExist = await checkDirExist(cachePath)
-    Log.info(`CACHE EXIST ${isCacheExist}`)
     if (isCacheExist) return Log.info('Cache exist, skip save')
     Log.info('Cache not exist, save cache')
     await runExec(`mkdir -p ${cachePath}`)

@@ -85,8 +85,6 @@ export const getVars = () => {
   Log.info(`Target Path: ${targetPath}`)
   const { dir: targetDir } = path.parse(targetPath)
   Log.info(`Target Dir: ${targetDir}`)
-  // const isCacheExist = checkCacheExist(cachePath)
-  // Log.info(`Exist: ${isCacheExist}`)
 
   return {
     options,
