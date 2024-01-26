@@ -24838,6 +24838,7 @@ const checkDirExist = async (path) => {
                 return reject(error.message);
             }
             if (stdout === '1') {
+                console.log('stdout', stdout);
                 return resolve(true);
             }
             resolve(false);
