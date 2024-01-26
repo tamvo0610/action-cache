@@ -5,7 +5,7 @@ import { getVars, isErrorLike } from './utils/actionUtils'
 import * as fs from 'fs'
 import { Log } from './utils/logUtils'
 import path from 'path'
-import { execSync } from 'child_process'
+import { execSync, exec } from 'child_process'
 
 async function save() {
   try {
@@ -14,7 +14,6 @@ async function save() {
     if (isCacheExist) return
     execSync(`mkdir -p ${cachePath}`)
     Log.info(`Create Cache Folder ${cachePath}`)
-    // execSync(`cd ${targetPath} && ls`)
     execSync(`rsync -a ${targetPath}/ ${cachePath}`)
     Log.info(`Sync Cache Folder ${targetPath} to ${cachePath}`)
   } catch (error: any) {
