@@ -9,19 +9,27 @@ import { Log } from './utils/logUtils'
 
 async function restore() {
   try {
-    const { cachePath, targetDir, options } = getVars()
+    const { cachePath, targetDir, targetPath, options } = getVars()
     const isCacheExist = await checkDirExist(cachePath)
     if (isCacheExist) {
       Log.info('Cache exist, restore cache')
-      await runExec(`mkdir -p ${targetDir}`)
       Log.info('Create target folder')
+      await runExec(`mkdir -p ${targetDir}`)
+      Log.info('Sync cache folder')
       await runExec(`rsync -a ${cachePath}/ ${targetDir}`)
       Log.info('Cache restore success')
-      core.setOutput('cache-hit', true)
+      return core.setOutput('cache-hit', true)
     } else {
       Log.info('Cache not exist, skip restore')
       if (!!options?.action) {
+        Log.info('Action cache provided, run action')
         await runExec(`cd ${options.workingDir} && ${options.action}`)
+        Log.info('Create cache folder')
+        await runExec(`mkdir -p ${cachePath}`)
+        Log.info('Sync cache folder')
+        await runExec(`rsync -a ${targetPath}/ ${cachePath}`)
+        Log.info('Cache save success')
+        return core.setOutput('cache-hit', true)
       }
       core.setOutput('cache-hit', false)
     }
