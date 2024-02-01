@@ -21,6 +21,7 @@ async function restore() {
       return core.setOutput('cache-hit', true)
     } else {
       Log.info('Cache not exist, skip restore')
+      console.log('Action: ', options?.action)
       if (!!options?.action) {
         Log.info('Action cache provided, run action')
         await runExec(`cd ${options.workingDir} && ${options.action}`)
