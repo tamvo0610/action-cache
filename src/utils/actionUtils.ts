@@ -1,6 +1,7 @@
 import * as core from '@actions/core'
 import { exec, execSync as execSyncCP } from 'child_process'
 import path from 'path'
+import { Inputs } from 'src/constants'
 import { Log } from './logUtils'
 
 const has = <T extends Object>(obj: T, prop?: any) =>
@@ -58,11 +59,11 @@ export const checkDirExist = async (path: string): Promise<boolean> => {
 
 export const getVars = () => {
   const options = {
-    path: core.getInput('path'),
-    action: core.getInput('action'),
-    cacheKey: core.getInput('cache-key') || 'no-key',
-    cacheDir: core.getInput('cache-dir'),
-    workingDir: core.getInput('working-directory') || process.cwd()
+    path: core.getInput(Inputs.Path),
+    action: core.getInput(Inputs.Action),
+    cacheKey: core.getInput(Inputs.CacheKey) || 'no-key',
+    cacheDir: core.getInput(Inputs.CacheDir),
+    workingDir: core.getInput(Inputs.WorkingDir) || process.cwd()
   }
 
   if (!options.path) {

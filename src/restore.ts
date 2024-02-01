@@ -17,14 +17,13 @@ async function restore() {
       Log.info('Create target folder')
       await runExec(`rsync -a ${cachePath}/ ${targetDir}`)
       Log.info('Cache restore success')
-      core.setOutput('cache-hit', true)
-    } else {
-      Log.info('Cache not exist, skip restore')
-      if (!!options?.action) {
-        await runExec(`cd ${options.workingDir} && ${options.action}`)
-      }
-      core.setOutput('cache-hit', false)
+      return core.setOutput('cache-hit', true)
     }
+    Log.info('Cache not exist, skip restore')
+    if (!!options?.action) {
+      await runExec(`cd ${options.workingDir} && ${options.action}`)
+    }
+    core.setOutput('cache-hit', false)
   } catch (error: any) {
     const errorMessage = isErrorLike(error) ? error.message : error
     core.setFailed(Log.error(errorMessage))
