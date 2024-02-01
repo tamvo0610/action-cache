@@ -2,7 +2,7 @@ import * as core from '@actions/core'
 import { exec, execSync as execSyncCP } from 'child_process'
 import path from 'path'
 import { Log } from './logUtils'
-import { Inputs } from 'src/constants'
+import { Inputs, State } from 'src/constants'
 
 const has = <T extends Object>(obj: T, prop?: any) =>
   Object.prototype.hasOwnProperty.call(obj, prop)
@@ -79,13 +79,16 @@ export const getVars = () => {
   }
 
   const cachePath = path.join(options.cacheDir, options.cacheKey)
+  core.saveState(State.CachePath, cachePath)
   Log.info(`Cache Path: ${cachePath}`)
-  // core.saveState()
   const { dir: cacheDir } = path.parse(cachePath)
+  core.saveState(State.CacheDir, cacheDir)
   Log.info(`Cache Dir: ${cacheDir}`)
   const targetPath = path.join(options.workingDir, options.path)
+  core.saveState(State.TargetPath, targetPath)
   Log.info(`Target Path: ${targetPath}`)
   const { dir: targetDir } = path.parse(targetPath)
+  core.saveState(State.TargetDir, targetDir)
   Log.info(`Target Dir: ${targetDir}`)
 
   return {

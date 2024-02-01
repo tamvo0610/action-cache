@@ -5,3 +5,10 @@ export const Inputs = {
   CacheDir: 'cache-dir',
   WorkingDir: 'working-directory'
 }
+
+export const State = {
+  CachePath: 'cache-path',
+  CacheDir: 'cache-dir',
+  TargetPath: 'target-path',
+  TargetDir: 'target-dir'
+}
