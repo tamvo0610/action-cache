@@ -19,7 +19,7 @@ export async function save() {
     // await io.mv(targetPath, cachePath, {
     //   force: true
     // })
-    await runExec(`rsync -avh -h ${targetPath} ${cachePath}`)
+    await runExec(`rsync -av ${targetPath} ${cachePath}`)
     Log.info('Cache save success')
   } catch (error: any) {
     const errorMessage = isErrorLike(error) ? error.message : error

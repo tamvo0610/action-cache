@@ -24779,7 +24779,7 @@ async function save() {
         // await io.mv(targetPath, cachePath, {
         //   force: true
         // })
-        await (0, actionUtils_1.runExec)(`rsync -avh -h ${targetPath} ${cachePath}`);
+        await (0, actionUtils_1.runExec)(`rsync -av ${targetPath} ${cachePath}`);
         logUtils_1.Log.info('Cache save success');
     }
     catch (error) {
