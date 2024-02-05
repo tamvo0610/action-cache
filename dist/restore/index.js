@@ -25270,13 +25270,14 @@ async function restore() {
         if (isCacheExist) {
             logUtils_1.Log.info('Cache exist, restore cache');
             await io.mkdirP(cachePath);
-            // await io.cp(cachePath, targetPath, { recursive: true })
+            logUtils_1.Log.info('Create target folder');
+            await io.cp(cachePath, targetPath, { recursive: true });
             // Log.info(dqwdqw)
             // io.cp('-r', `${cachePath}/`, targetPath)
             // await runExec(`mkdir -p ${targetPath}`)
             // Log.info('Create target folder')
             // await runExec(`rsync -a ${cachePath}/ ${targetPath}`)
-            // Log.info('Cache restore success')
+            logUtils_1.Log.info('Cache restore success');
             return core.setOutput('cache-hit', true);
         }
         logUtils_1.Log.info('Cache not exist, skip restore');
