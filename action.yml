@@ -28,7 +28,7 @@ outputs:
     description: 'A boolean value to indicate if cache was found and restored'
 
 runs:
-  using: node20
+  using: node16
   main: dist/restore/index.js
   post: dist/save/index.js
   post-if: success()
