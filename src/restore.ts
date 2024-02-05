@@ -14,9 +14,11 @@ async function restore() {
     const isCacheExist = await checkDirExist(cachePath)
     if (isCacheExist) {
       Log.info('Cache exist, restore cache')
-      await io.mkdirP(targetPath)
+      // await io.mkdirP(targetPath)
+      await runExec(`mkdir -p ${targetPath}`)
       Log.info('Create target folder')
-      await io.cp(cachePath, targetPath, { recursive: true })
+      await runExec(`rsync -a -h ${cachePath} ${targetPath}`)
+      // await io.cp(cachePath, targetPath, { recursive: true })
       Log.info('Cache restore success')
       return core.setOutput('cache-hit', true)
     }

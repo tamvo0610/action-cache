@@ -24774,7 +24774,7 @@ async function save() {
         if (isCacheExist)
             return logUtils_1.Log.info('Cache exist, skip save');
         logUtils_1.Log.info('Cache not exist, save cache');
-        await (0, actionUtils_1.runExec)(`mkdir -p ${cachePath}`);
+        await (0, actionUtils_1.runExec)(`mkdir -p -h ${cachePath}`);
         logUtils_1.Log.info('Create cache folder');
         // await io.mv(targetPath, cachePath, {
         //   force: true
