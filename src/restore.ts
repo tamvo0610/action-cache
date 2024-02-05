@@ -15,7 +15,7 @@ async function restore() {
     if (isCacheExist) {
       Log.info('Cache exist, restore cache')
       await io.mkdirP(cachePath)
-      await io.cp(cachePath, targetPath, { recursive: true })
+      // await io.cp(cachePath, targetPath, { recursive: true })
       // Log.info(dqwdqw)
       // io.cp('-r', `${cachePath}/`, targetPath)
       // await runExec(`mkdir -p ${targetPath}`)
