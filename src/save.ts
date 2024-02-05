@@ -17,7 +17,10 @@ export async function save() {
     await io.mkdirP(cachePath)
     // await runExec(`mkdir -p ${cachePath}`)
     Log.info('Create cache folder')
-    await io.cp(targetPath, cachePath, { recursive: true })
+    await io.cp(targetPath, cachePath, {
+      copySourceDirectory: true,
+      recursive: true
+    })
     // await runExec(`rsync -a ${targetPath}/ ${cachePath}`)
     Log.info('Cache save success')
   } catch (error: any) {
