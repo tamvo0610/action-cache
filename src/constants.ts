@@ -10,7 +10,10 @@ export enum State {
   CachePath = 'CACHE_PATH',
   CacheDir = 'CACHE_DIR',
   TargetPath = 'TARGET_PATH',
-  TargetDir = 'TARGET_DIR'
+  TargetDir = 'TARGET_DIR',
+  WorkingDir = 'WORKING_DIR',
+  Action = 'ACTION',
+  Options = 'OPTIONS'
 }
 
 export enum Outputs {

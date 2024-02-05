@@ -7,10 +7,16 @@ import {
 } from './utils/actionUtils'
 import * as io from '@actions/io/'
 import { Log } from './utils/logUtils'
+import { State } from './constants'
 
 async function restore() {
   try {
-    const { cachePath, targetPath, options } = getVars()
+    const cachePath = core.getState(State.CachePath)
+    const targetPath = core.getState(State.TargetPath)
+    const options = {
+      workingDir: core.getState(State.WorkingDir),
+      action: core.getState(State.Action)
+    }
     const isCacheExist = await checkDirExist(cachePath)
     if (isCacheExist) {
       Log.info('Cache exist, restore cache')

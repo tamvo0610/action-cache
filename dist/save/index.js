@@ -24723,6 +24723,9 @@ var State;
     State["CacheDir"] = "CACHE_DIR";
     State["TargetPath"] = "TARGET_PATH";
     State["TargetDir"] = "TARGET_DIR";
+    State["WorkingDir"] = "WORKING_DIR";
+    State["Action"] = "ACTION";
+    State["Options"] = "OPTIONS";
 })(State || (exports.State = State = {}));
 var Outputs;
 (function (Outputs) {
@@ -24890,13 +24893,19 @@ const getVars = () => {
         core.setFailed(logUtils_1.Log.error('cache-dir is required but was not provided.'));
     }
     const cachePath = path_1.default.join(options.cacheDir, options.cacheKey);
+    core.saveState(constants_1.State.CachePath, cachePath);
     logUtils_1.Log.info(`Cache Path: ${cachePath}`);
     const { dir: cacheDir } = path_1.default.parse(cachePath);
+    core.saveState(constants_1.State.CacheDir, cacheDir);
     logUtils_1.Log.info(`Cache Dir: ${cacheDir}`);
     const targetPath = path_1.default.join(options.workingDir, options.path);
+    core.saveState(constants_1.State.TargetPath, targetPath);
     logUtils_1.Log.info(`Target Path: ${targetPath}`);
     const { dir: targetDir } = path_1.default.parse(targetPath);
+    core.saveState(constants_1.State.TargetDir, targetDir);
     logUtils_1.Log.info(`Target Dir: ${targetDir}`);
+    core.saveState(constants_1.State.WorkingDir, options.workingDir);
+    core.saveState(constants_1.State.Action, options.action);
     return {
         options,
         cachePath,
