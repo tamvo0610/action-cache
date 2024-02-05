@@ -14,12 +14,12 @@ export async function save() {
     const isCacheExist = await checkDirExist(cachePath)
     if (isCacheExist) return Log.info('Cache exist, skip save')
     Log.info('Cache not exist, save cache')
-    await runExec(`mkdir -p -h ${cachePath}`)
+    await runExec(`mkdir -p ${cachePath}`)
     Log.info('Create cache folder')
     // await io.mv(targetPath, cachePath, {
     //   force: true
     // })
-    await runExec(`rsync -a ${targetPath} ${cachePath}`)
+    await runExec(`rsync -a -h ${targetPath} ${cachePath}`)
     Log.info('Cache save success')
   } catch (error: any) {
     const errorMessage = isErrorLike(error) ? error.message : error
