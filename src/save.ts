@@ -15,7 +15,7 @@ export async function save() {
     if (isCacheExist) return Log.info('Cache exist, skip save')
     Log.info('Cache not exist, save cache')
     await mkdirP(cachePath)
-    await runExec(`mkdir -p ${cachePath}`)
+    // await runExec(`mkdir -p ${cachePath}`)
     Log.info('Create cache folder')
     await runExec(`rsync -a ${targetPath}/ ${cachePath}`)
     Log.info('Cache save success')

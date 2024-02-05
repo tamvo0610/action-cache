@@ -25272,7 +25272,7 @@ async function save() {
             return logUtils_1.Log.info('Cache exist, skip save');
         logUtils_1.Log.info('Cache not exist, save cache');
         await (0, io_1.mkdirP)(cachePath);
-        await (0, actionUtils_1.runExec)(`mkdir -p ${cachePath}`);
+        // await runExec(`mkdir -p ${cachePath}`)
         logUtils_1.Log.info('Create cache folder');
         await (0, actionUtils_1.runExec)(`rsync -a ${targetPath}/ ${cachePath}`);
         logUtils_1.Log.info('Cache save success');
