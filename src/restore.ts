@@ -17,7 +17,7 @@ async function restore() {
       // await io.mkdirP(targetPath)
       await runExec(`mkdir -p ${targetPath}`)
       Log.info('Create target folder')
-      await runExec(`rsync -a ${cachePath} ${targetPath}`)
+      await runExec(`rsync -a ${cachePath}/ ${targetPath}`)
       // await io.cp(cachePath, targetPath, { recursive: true })
       Log.info('Cache restore success')
       return core.setOutput('cache-hit', true)
