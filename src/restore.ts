@@ -5,7 +5,7 @@ import {
   isErrorLike,
   runExec
 } from './utils/actionUtils'
-import { mkdirP, mv, cp } from '@actions/io/'
+import * as io from '@actions/io/'
 import { Log } from './utils/logUtils'
 
 async function restore() {
@@ -14,8 +14,10 @@ async function restore() {
     const isCacheExist = await checkDirExist(cachePath)
     if (isCacheExist) {
       Log.info('Cache exist, restore cache')
-      const dqwdqw = await mkdirP(cachePath)
-      Log.info(dqwdqw)
+      await io.mkdirP(cachePath)
+      await io.cp(cachePath, targetPath, { recursive: true })
+      // Log.info(dqwdqw)
+      // io.cp('-r', `${cachePath}/`, targetPath)
       await runExec(`mkdir -p ${targetPath}`)
       // Log.info('Create target folder')
       // await runExec(`rsync -a ${cachePath}/ ${targetPath}`)
