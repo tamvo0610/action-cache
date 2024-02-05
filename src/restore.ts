@@ -14,7 +14,7 @@ async function restore() {
     const isCacheExist = await checkDirExist(cachePath)
     if (isCacheExist) {
       Log.info('Cache exist, restore cache')
-      await io.mkdirP(cachePath)
+      await io.mkdirP(targetPath)
       Log.info('Create target folder')
       await io.cp(cachePath, targetPath, { recursive: true })
       Log.info('Cache restore success')

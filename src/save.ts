@@ -5,7 +5,7 @@ import {
   isErrorLike,
   runExec
 } from './utils/actionUtils'
-import { mkdirP, mv, cp } from '@actions/io/'
+import * as io from '@actions/io/'
 import { Log } from './utils/logUtils'
 
 export async function save() {
@@ -14,10 +14,11 @@ export async function save() {
     const isCacheExist = await checkDirExist(cachePath)
     if (isCacheExist) return Log.info('Cache exist, skip save')
     Log.info('Cache not exist, save cache')
-    await mkdirP(cachePath)
+    await io.mkdirP(cachePath)
     // await runExec(`mkdir -p ${cachePath}`)
     Log.info('Create cache folder')
-    await runExec(`rsync -a ${targetPath}/ ${cachePath}`)
+    await io.cp(targetPath, cachePath, { recursive: true })
+    // await runExec(`rsync -a ${targetPath}/ ${cachePath}`)
     Log.info('Cache save success')
   } catch (error: any) {
     const errorMessage = isErrorLike(error) ? error.message : error
