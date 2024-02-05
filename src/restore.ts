@@ -14,6 +14,8 @@ async function restore() {
     const isCacheExist = await checkDirExist(cachePath)
     if (isCacheExist) {
       Log.info('Cache exist, restore cache')
+      const dqwdqw = await mkdirP(cachePath)
+      Log.info(dqwdqw)
       await runExec(`mkdir -p ${targetPath}`)
       // Log.info('Create target folder')
       // await runExec(`rsync -a ${cachePath}/ ${targetPath}`)
