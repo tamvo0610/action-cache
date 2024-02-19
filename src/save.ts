@@ -1,25 +1,19 @@
 import * as core from '@actions/core'
-import {
-  checkDirExist,
-  getVars,
-  isErrorLike,
-  runExec
-} from './utils/actionUtils'
-import * as io from '@actions/io/'
+import * as ultils from './utils/actionUtils'
 import { Log } from './utils/logUtils'
 
 export async function save() {
   try {
-    const { cachePath, targetPath } = await getVars()
-    const isCacheExist = await checkDirExist(cachePath)
+    const { cachePath, targetPath } = await ultils.getInputs()
+    const isCacheExist = await ultils.isCacheDirExist(cachePath)
     if (isCacheExist) return Log.info('Cache exist, skip save')
     Log.info('Cache not exist, save cache')
-    await runExec(`mkdir -p ${cachePath}`)
+    await ultils.exec(`mkdir -p ${cachePath}`)
     Log.info('Create cache folder')
-    await runExec(`rsync -a ${targetPath}/ ${cachePath}`)
+    await ultils.exec(`rsync -a ${targetPath}/ ${cachePath}`)
     Log.info('Cache save success')
   } catch (error: any) {
-    const errorMessage = isErrorLike(error) ? error.message : error
+    const errorMessage = ultils.isErrorLike(error) ? error.message : error
     core.setFailed(Log.error(errorMessage))
   }
 }

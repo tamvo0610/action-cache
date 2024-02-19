@@ -1,35 +1,24 @@
 import * as core from '@actions/core'
 import * as ultils from './utils/actionUtils'
-import * as io from '@actions/io/'
-import { exists } from '@actions/io/lib/io-util.js'
 import { Log } from './utils/logUtils'
-import { Outputs, State } from './constants'
+import { Outputs } from './constants'
+import { _exec } from './utils/execUtils'
 
 async function restoreImpl() {
   try {
-    const {
-      cachePath,
-      targetPath,
-      options,
-      isCacheExist: test
-    } = await ultils.getVars()
-    const isCacheExist = await ultils.checkDirExist(cachePath)
-    console.log('isCacheExist', isCacheExist)
-    // const test = exists(cachePath)
-    console.log('isCacheExist Test', test)
+    const { cachePath, targetPath, options } = await ultils.getInputs()
+    const isCacheExist = await _exec.exists(cachePath)
     if (isCacheExist) {
       Log.info('Cache exist, restore cache')
-      // await io.mkdirP(targetPath)
-      await ultils.runExec(`mkdir -p ${targetPath}`)
+      await _exec.mkdir(targetPath)
       Log.info('Create target folder')
-      await ultils.runExec(`rsync -a ${cachePath}/ ${targetPath}`)
-      // await io.cp(cachePath, targetPath, { recursive: true })
+      await _exec.rsync(cachePath, targetPath)
       Log.info('Cache restore success')
       return core.setOutput(Outputs.CacheHit, true)
     }
     Log.info('Cache not exist, skip restore')
     if (!!options?.action) {
-      await ultils.runExec(`cd ${options.workingDir} && ${options.action}`)
+      await _exec.run(`cd ${options.workingDir} && ${options.action}`)
     }
     core.setOutput(Outputs.CacheHit, false)
   } catch (error: any) {

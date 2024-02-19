@@ -1,6 +1,5 @@
 import * as core from '@actions/core'
-import { exec, execSync as execSyncCP } from 'child_process'
-import * as ultis from '@actions/io/lib/io-util.js'
+import { exec as execCP } from 'child_process'
 import path from 'path'
 import { Inputs } from 'src/constants'
 import { Log } from './logUtils'
@@ -26,39 +25,7 @@ export const isErrorLike = (err: any) => {
   return false
 }
 
-export const runExec = async (str: string): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    exec(str, (error, stdout) => {
-      if (error) {
-        return reject(error.message)
-      }
-      resolve(stdout)
-    })
-  })
-}
-
-export const checkDirExist = async (path: string): Promise<boolean> => {
-  return new Promise((resolve, reject) => {
-    exec(
-      `if [ -d "${path}" ]; then 
-          echo "1"; 
-        else 
-          echo "0"; 
-        fi`,
-      (error, stdout, stderr) => {
-        if (error) {
-          return reject(error.message)
-        }
-        if (stdout.trim() === '1') {
-          return resolve(true)
-        }
-        resolve(false)
-      }
-    )
-  })
-}
-
-export const getVars = async () => {
+export const getInputs = async () => {
   const options = {
     path: core.getInput(Inputs.Path),
     action: core.getInput(Inputs.Action),
@@ -87,22 +54,66 @@ export const getVars = async () => {
   Log.info(`Target Path: ${targetPath}`)
   const { dir: targetDir } = path.parse(targetPath)
   Log.info(`Target Dir: ${targetDir}`)
-  const isCacheExist = await ultis.exists(cachePath)
 
   return {
     options,
     cachePath,
     cacheDir,
     targetPath,
-    targetDir,
-    isCacheExist
+    targetDir
   }
 }
 
-export const execSync = (str: string) => {
-  return execSyncCP(str, {
-    shell: 'true',
-    // stdio: 'inherit',
-    encoding: 'utf-8'
+export const isCacheDirExist = async (path: string): Promise<boolean> => {
+  return new Promise((resolve, reject) => {
+    execCP(
+      `if [ -d "${path}" ]; then 
+          echo "1"; 
+        else 
+          echo "0"; 
+        fi`,
+      (error, stdout, stderr) => {
+        if (error) {
+          return reject(error.message)
+        }
+        if (stdout.trim() === '1') {
+          return resolve(true)
+        }
+        resolve(false)
+      }
+    )
+  })
+}
+
+export const mkdir = async (path: string): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    execCP(`mkdir -p ${path}`, (error, stdout, stderr) => {
+      if (error) {
+        return reject(error.message)
+      }
+      resolve(stdout.trim())
+    })
+  })
+}
+
+export const rsync = async (source: string, dest: string): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    execCP(`rsync -a ${source}/ ${dest}`, (error, stdout, stderr) => {
+      if (error) {
+        return reject(error.message)
+      }
+      resolve(stdout.trim())
+    })
+  })
+}
+
+export const exec = async (str: string): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    execCP(str, (error, stdout) => {
+      if (error) {
+        return reject(error.message)
+      }
+      resolve(stdout)
+    })
   })
 }
