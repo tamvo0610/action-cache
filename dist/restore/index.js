@@ -24959,15 +24959,14 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.restoreRun = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const ultils = __importStar(__nccwpck_require__(6850));
-const io_util_js_1 = __nccwpck_require__(1962);
 const logUtils_1 = __nccwpck_require__(2585);
 const constants_1 = __nccwpck_require__(9042);
 async function restoreImpl() {
     try {
-        const { cachePath, targetPath, options } = ultils.getVars();
+        const { cachePath, targetPath, options, isCacheExist: test } = await ultils.getVars();
         const isCacheExist = await ultils.checkDirExist(cachePath);
         console.log('isCacheExist', isCacheExist);
-        const test = (0, io_util_js_1.exists)(cachePath);
+        // const test = exists(cachePath)
         console.log('isCacheExist Test', test);
         if (isCacheExist) {
             logUtils_1.Log.info('Cache exist, restore cache');
@@ -25033,6 +25032,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.execSync = exports.getVars = exports.checkDirExist = exports.runExec = exports.isErrorLike = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const child_process_1 = __nccwpck_require__(2081);
+const ultis = __importStar(__nccwpck_require__(1962));
 const path_1 = __importDefault(__nccwpck_require__(1017));
 const constants_1 = __nccwpck_require__(9042);
 const logUtils_1 = __nccwpck_require__(2585);
@@ -25080,7 +25080,7 @@ const checkDirExist = async (path) => {
     });
 };
 exports.checkDirExist = checkDirExist;
-const getVars = () => {
+const getVars = async () => {
     const options = {
         path: core.getInput(constants_1.Inputs.Path),
         action: core.getInput(constants_1.Inputs.Action),
@@ -25105,12 +25105,14 @@ const getVars = () => {
     logUtils_1.Log.info(`Target Path: ${targetPath}`);
     const { dir: targetDir } = path_1.default.parse(targetPath);
     logUtils_1.Log.info(`Target Dir: ${targetDir}`);
+    const isCacheExist = await ultis.exists(cachePath);
     return {
         options,
         cachePath,
         cacheDir,
         targetPath,
-        targetDir
+        targetDir,
+        isCacheExist
     };
 };
 exports.getVars = getVars;

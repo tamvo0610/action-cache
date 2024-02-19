@@ -10,7 +10,7 @@ import { Log } from './utils/logUtils'
 
 export async function save() {
   try {
-    const { cachePath, targetPath } = getVars()
+    const { cachePath, targetPath } = await getVars()
     const isCacheExist = await checkDirExist(cachePath)
     if (isCacheExist) return Log.info('Cache exist, skip save')
     Log.info('Cache not exist, save cache')

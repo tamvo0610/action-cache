@@ -7,10 +7,15 @@ import { Outputs, State } from './constants'
 
 async function restoreImpl() {
   try {
-    const { cachePath, targetPath, options } = ultils.getVars()
+    const {
+      cachePath,
+      targetPath,
+      options,
+      isCacheExist: test
+    } = await ultils.getVars()
     const isCacheExist = await ultils.checkDirExist(cachePath)
     console.log('isCacheExist', isCacheExist)
-    const test = exists(cachePath)
+    // const test = exists(cachePath)
     console.log('isCacheExist Test', test)
     if (isCacheExist) {
       Log.info('Cache exist, restore cache')

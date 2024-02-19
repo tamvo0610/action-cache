@@ -1,7 +1,8 @@
 import * as core from '@actions/core'
 import { exec, execSync as execSyncCP } from 'child_process'
+import * as ultis from '@actions/io/lib/io-util.js'
 import path from 'path'
-import { Inputs, State } from 'src/constants'
+import { Inputs } from 'src/constants'
 import { Log } from './logUtils'
 
 const has = <T extends Object>(obj: T, prop?: any) =>
@@ -57,7 +58,7 @@ export const checkDirExist = async (path: string): Promise<boolean> => {
   })
 }
 
-export const getVars = () => {
+export const getVars = async () => {
   const options = {
     path: core.getInput(Inputs.Path),
     action: core.getInput(Inputs.Action),
@@ -86,13 +87,15 @@ export const getVars = () => {
   Log.info(`Target Path: ${targetPath}`)
   const { dir: targetDir } = path.parse(targetPath)
   Log.info(`Target Dir: ${targetDir}`)
+  const isCacheExist = await ultis.exists(cachePath)
 
   return {
     options,
     cachePath,
     cacheDir,
     targetPath,
-    targetDir
+    targetDir,
+    isCacheExist
   }
 }
 
