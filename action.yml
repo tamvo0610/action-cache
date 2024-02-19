@@ -1,5 +1,7 @@
 name: 'Local Cache Self-Hosted'
-description: 'Cache dependencies and build outputs to improve workflow execution time on self hosted machine'
+description:
+  'Cache dependencies and build outputs to improve workflow execution time on
+  self hosted machine'
 author: 'Tâm Võ'
 
 branding:
@@ -7,7 +9,7 @@ branding:
   color: 'red'
 
 inputs:
-  path: 
+  path:
     description: 'An explicit key for versioning the cache'
     required: true
   action:
@@ -28,7 +30,7 @@ outputs:
     description: 'A boolean value to indicate if cache was found and restored'
 
 runs:
-  using: node16
+  using: node20
   main: dist/restore/index.js
   post: dist/save/index.js
   post-if: success()
