@@ -24779,6 +24779,7 @@ async function restore() {
             action: core.getState(constants_1.State.Action)
         };
         const isCacheExist = await (0, actionUtils_1.checkDirExist)(cachePath);
+        console.log('isCacheExist', isCacheExist);
         if (isCacheExist) {
             logUtils_1.Log.info('Cache exist, restore cache');
             // await io.mkdirP(targetPath)
