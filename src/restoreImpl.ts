@@ -5,19 +5,9 @@ import { exists } from '@actions/io/lib/io-util.js'
 import { Log } from './utils/logUtils'
 import { Outputs, State } from './constants'
 
-export async function restoreRun() {
+async function restoreImpl() {
   try {
-    if (!ultils.isFeatureAvailable()) {
-      core.setOutput(Outputs.CacheHit, false)
-      return
-    }
-    const cachePath = core.getState(State.CachePath)
-    const targetPath = core.getState(State.TargetPath)
-    const options = {
-      workingDir: core.getState(State.WorkingDir),
-      action: core.getState(State.Action)
-    }
-
+    const { cachePath, targetPath, options } = ultils.getVars()
     const isCacheExist = await ultils.checkDirExist(cachePath)
     console.log('isCacheExist', isCacheExist)
     const test = exists(cachePath)
@@ -41,4 +31,8 @@ export async function restoreRun() {
     const errorMessage = ultils.isErrorLike(error) ? error.message : error
     core.setFailed(Log.error(errorMessage))
   }
+}
+
+export async function restoreRun() {
+  restoreImpl()
 }

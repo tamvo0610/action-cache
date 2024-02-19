@@ -24962,18 +24962,9 @@ const ultils = __importStar(__nccwpck_require__(6850));
 const io_util_js_1 = __nccwpck_require__(1962);
 const logUtils_1 = __nccwpck_require__(2585);
 const constants_1 = __nccwpck_require__(9042);
-async function restoreRun() {
+async function restoreImpl() {
     try {
-        if (!ultils.isFeatureAvailable()) {
-            core.setOutput(constants_1.Outputs.CacheHit, false);
-            return;
-        }
-        const cachePath = core.getState(constants_1.State.CachePath);
-        const targetPath = core.getState(constants_1.State.TargetPath);
-        const options = {
-            workingDir: core.getState(constants_1.State.WorkingDir),
-            action: core.getState(constants_1.State.Action)
-        };
+        const { cachePath, targetPath, options } = ultils.getVars();
         const isCacheExist = await ultils.checkDirExist(cachePath);
         console.log('isCacheExist', isCacheExist);
         const test = (0, io_util_js_1.exists)(cachePath);
@@ -24998,6 +24989,9 @@ async function restoreRun() {
         const errorMessage = ultils.isErrorLike(error) ? error.message : error;
         core.setFailed(logUtils_1.Log.error(errorMessage));
     }
+}
+async function restoreRun() {
+    restoreImpl();
 }
 exports.restoreRun = restoreRun;
 
@@ -25036,7 +25030,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.execSync = exports.getVars = exports.isFeatureAvailable = exports.checkDirExist = exports.runExec = exports.isErrorLike = void 0;
+exports.execSync = exports.getVars = exports.checkDirExist = exports.runExec = exports.isErrorLike = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const child_process_1 = __nccwpck_require__(2081);
 const path_1 = __importDefault(__nccwpck_require__(1017));
@@ -25086,44 +25080,7 @@ const checkDirExist = async (path) => {
     });
 };
 exports.checkDirExist = checkDirExist;
-const isFeatureAvailable = () => {
-    const options = {
-        path: core.getInput(constants_1.Inputs.Path),
-        action: core.getInput(constants_1.Inputs.Action),
-        cacheKey: core.getInput(constants_1.Inputs.CacheKey) || 'no-key',
-        cacheDir: core.getInput(constants_1.Inputs.CacheDir),
-        workingDir: core.getInput(constants_1.Inputs.WorkingDir) || process.cwd()
-    };
-    if (!options.path) {
-        core.setFailed(logUtils_1.Log.error('path is required but was not provided.'));
-        return false;
-    }
-    if (!options.cacheKey) {
-        core.setFailed(logUtils_1.Log.error('cache-key is required but was not provided.'));
-        return false;
-    }
-    if (!options.cacheDir) {
-        core.setFailed(logUtils_1.Log.error('cache-dir is required but was not provided.'));
-        return false;
-    }
-    const cachePath = path_1.default.join(options.cacheDir, options.cacheKey);
-    core.saveState(constants_1.State.CachePath, cachePath);
-    logUtils_1.Log.info(`Cache Path: ${cachePath}`);
-    const { dir: cacheDir } = path_1.default.parse(cachePath);
-    core.saveState(constants_1.State.CacheDir, cacheDir);
-    logUtils_1.Log.info(`Cache Dir: ${cacheDir}`);
-    const targetPath = path_1.default.join(options.workingDir, options.path);
-    core.saveState(constants_1.State.TargetPath, targetPath);
-    logUtils_1.Log.info(`Target Path: ${targetPath}`);
-    const { dir: targetDir } = path_1.default.parse(targetPath);
-    core.saveState(constants_1.State.TargetDir, targetDir);
-    logUtils_1.Log.info(`Target Dir: ${targetDir}`);
-    core.saveState(constants_1.State.WorkingDir, options.workingDir);
-    core.saveState(constants_1.State.Action, options.action);
-    return true;
-};
-exports.isFeatureAvailable = isFeatureAvailable;
-const getVars = (callback) => {
+const getVars = () => {
     const options = {
         path: core.getInput(constants_1.Inputs.Path),
         action: core.getInput(constants_1.Inputs.Action),
@@ -25141,20 +25098,13 @@ const getVars = (callback) => {
         core.setFailed(logUtils_1.Log.error('cache-dir is required but was not provided.'));
     }
     const cachePath = path_1.default.join(options.cacheDir, options.cacheKey);
-    core.saveState(constants_1.State.CachePath, cachePath);
     logUtils_1.Log.info(`Cache Path: ${cachePath}`);
     const { dir: cacheDir } = path_1.default.parse(cachePath);
-    core.saveState(constants_1.State.CacheDir, cacheDir);
     logUtils_1.Log.info(`Cache Dir: ${cacheDir}`);
     const targetPath = path_1.default.join(options.workingDir, options.path);
-    core.saveState(constants_1.State.TargetPath, targetPath);
     logUtils_1.Log.info(`Target Path: ${targetPath}`);
     const { dir: targetDir } = path_1.default.parse(targetPath);
-    core.saveState(constants_1.State.TargetDir, targetDir);
     logUtils_1.Log.info(`Target Dir: ${targetDir}`);
-    core.saveState(constants_1.State.WorkingDir, options.workingDir);
-    core.saveState(constants_1.State.Action, options.action);
-    callback?.();
     return {
         options,
         cachePath,
