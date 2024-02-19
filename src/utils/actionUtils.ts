@@ -57,7 +57,48 @@ export const checkDirExist = async (path: string): Promise<boolean> => {
   })
 }
 
-export const getVars = () => {
+export const isFeatureAvailable = () => {
+  const options = {
+    path: core.getInput(Inputs.Path),
+    action: core.getInput(Inputs.Action),
+    cacheKey: core.getInput(Inputs.CacheKey) || 'no-key',
+    cacheDir: core.getInput(Inputs.CacheDir),
+    workingDir: core.getInput(Inputs.WorkingDir) || process.cwd()
+  }
+
+  if (!options.path) {
+    core.setFailed(Log.error('path is required but was not provided.'))
+    return false
+  }
+
+  if (!options.cacheKey) {
+    core.setFailed(Log.error('cache-key is required but was not provided.'))
+    return false
+  }
+
+  if (!options.cacheDir) {
+    core.setFailed(Log.error('cache-dir is required but was not provided.'))
+    return false
+  }
+
+  const cachePath = path.join(options.cacheDir, options.cacheKey)
+  core.saveState(State.CachePath, cachePath)
+  Log.info(`Cache Path: ${cachePath}`)
+  const { dir: cacheDir } = path.parse(cachePath)
+  core.saveState(State.CacheDir, cacheDir)
+  Log.info(`Cache Dir: ${cacheDir}`)
+  const targetPath = path.join(options.workingDir, options.path)
+  core.saveState(State.TargetPath, targetPath)
+  Log.info(`Target Path: ${targetPath}`)
+  const { dir: targetDir } = path.parse(targetPath)
+  core.saveState(State.TargetDir, targetDir)
+  Log.info(`Target Dir: ${targetDir}`)
+  core.saveState(State.WorkingDir, options.workingDir)
+  core.saveState(State.Action, options.action)
+  return true
+}
+
+export const getVars = (callback?: () => void) => {
   const options = {
     path: core.getInput(Inputs.Path),
     action: core.getInput(Inputs.Action),
@@ -92,6 +133,8 @@ export const getVars = () => {
   Log.info(`Target Dir: ${targetDir}`)
   core.saveState(State.WorkingDir, options.workingDir)
   core.saveState(State.Action, options.action)
+
+  callback?.()
 
   return {
     options,
