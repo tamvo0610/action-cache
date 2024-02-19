@@ -1,8 +1,7 @@
 import * as core from '@actions/core'
-import { exec as execCP } from 'child_process'
 import path from 'path'
-import { Inputs } from 'src/constants'
-import { Log } from './logUtils'
+import { Inputs } from 'src/constants/enum'
+import { Log } from './log.ultis'
 
 const has = <T extends Object>(obj: T, prop?: any) =>
   Object.prototype.hasOwnProperty.call(obj, prop)
@@ -60,60 +59,16 @@ export const getInputs = async () => {
     cachePath,
     cacheDir,
     targetPath,
-    targetDir
+    targetDir,
+    workingDir: options.workingDir,
+    targetAction: options.action
   }
 }
 
-export const isCacheDirExist = async (path: string): Promise<boolean> => {
-  return new Promise((resolve, reject) => {
-    execCP(
-      `if [ -d "${path}" ]; then 
-          echo "1"; 
-        else 
-          echo "0"; 
-        fi`,
-      (error, stdout, stderr) => {
-        if (error) {
-          return reject(error.message)
-        }
-        if (stdout.trim() === '1') {
-          return resolve(true)
-        }
-        resolve(false)
-      }
-    )
-  })
+export const setOutput = (name: string, value: any) => {
+  return core.setOutput(name, value)
 }
 
-export const mkdir = async (path: string): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    execCP(`mkdir -p ${path}`, (error, stdout, stderr) => {
-      if (error) {
-        return reject(error.message)
-      }
-      resolve(stdout.trim())
-    })
-  })
-}
-
-export const rsync = async (source: string, dest: string): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    execCP(`rsync -a ${source}/ ${dest}`, (error, stdout, stderr) => {
-      if (error) {
-        return reject(error.message)
-      }
-      resolve(stdout.trim())
-    })
-  })
-}
-
-export const exec = async (str: string): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    execCP(str, (error, stdout) => {
-      if (error) {
-        return reject(error.message)
-      }
-      resolve(stdout)
-    })
-  })
+export const setFailed = (message: string) => {
+  core.setFailed(Log.error(message))
 }

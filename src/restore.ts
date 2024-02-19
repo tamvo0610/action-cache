@@ -1,3 +1,3 @@
-import { restoreRun } from './restoreImpl'
+import { restoreImpl } from './restoreImpl'
 
-restoreRun()
+void restoreImpl()

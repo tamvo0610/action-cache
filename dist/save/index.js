@@ -24702,7 +24702,7 @@ exports["default"] = _default;
 
 /***/ }),
 
-/***/ 9042:
+/***/ 5319:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -24737,7 +24737,7 @@ var Outputs;
 
 /***/ }),
 
-/***/ 5131:
+/***/ 6589:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -24766,34 +24766,34 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.save = void 0;
-const core = __importStar(__nccwpck_require__(2186));
-const ultils = __importStar(__nccwpck_require__(6850));
-const logUtils_1 = __nccwpck_require__(2585);
-async function save() {
+exports.saveImpl = void 0;
+const _action = __importStar(__nccwpck_require__(9350));
+const _exec = __importStar(__nccwpck_require__(4947));
+const log_ultis_1 = __nccwpck_require__(9857);
+async function saveImpl() {
     try {
-        const { cachePath, targetPath } = await ultils.getInputs();
-        const isCacheExist = await ultils.isCacheDirExist(cachePath);
-        if (isCacheExist)
-            return logUtils_1.Log.info('Cache exist, skip save');
-        logUtils_1.Log.info('Cache not exist, save cache');
-        await ultils.exec(`mkdir -p ${cachePath}`);
-        logUtils_1.Log.info('Create cache folder');
-        await ultils.exec(`rsync -a ${targetPath}/ ${cachePath}`);
-        logUtils_1.Log.info('Cache save success');
+        const { cachePath, targetPath, cacheDir, targetDir, targetAction, workingDir } = await _action.getInputs();
+        const isCacheExist = await _exec.exists(cachePath);
+        if (isCacheExist) {
+            return log_ultis_1.Log.info('Cache exist, skip save');
+        }
+        log_ultis_1.Log.info('Cache not exist, save cache');
+        await _exec.mkdir(cachePath);
+        log_ultis_1.Log.info('Create cache folder');
+        await _exec.rsync(targetPath, cachePath);
+        log_ultis_1.Log.info('Cache save success');
     }
     catch (error) {
-        const errorMessage = ultils.isErrorLike(error) ? error.message : error;
-        core.setFailed(logUtils_1.Log.error(errorMessage));
+        const errorMessage = _action.isErrorLike(error) ? error.message : error;
+        _action.setFailed(log_ultis_1.Log.error(errorMessage));
     }
 }
-exports.save = save;
-void save();
+exports.saveImpl = saveImpl;
 
 
 /***/ }),
 
-/***/ 6850:
+/***/ 9350:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -24825,12 +24825,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.exec = exports.rsync = exports.mkdir = exports.isCacheDirExist = exports.getInputs = exports.isErrorLike = void 0;
+exports.setFailed = exports.setOutput = exports.getInputs = exports.isErrorLike = void 0;
 const core = __importStar(__nccwpck_require__(2186));
-const child_process_1 = __nccwpck_require__(2081);
 const path_1 = __importDefault(__nccwpck_require__(1017));
-const constants_1 = __nccwpck_require__(9042);
-const logUtils_1 = __nccwpck_require__(2585);
+const enum_1 = __nccwpck_require__(5319);
+const log_ultis_1 = __nccwpck_require__(9857);
 const has = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop);
 const isErrorLike = (err) => {
     if (err instanceof Error) {
@@ -24848,94 +24847,93 @@ const isErrorLike = (err) => {
 exports.isErrorLike = isErrorLike;
 const getInputs = async () => {
     const options = {
-        path: core.getInput(constants_1.Inputs.Path),
-        action: core.getInput(constants_1.Inputs.Action),
-        cacheKey: core.getInput(constants_1.Inputs.CacheKey) || 'no-key',
-        cacheDir: core.getInput(constants_1.Inputs.CacheDir),
-        workingDir: core.getInput(constants_1.Inputs.WorkingDir) || process.cwd()
+        path: core.getInput(enum_1.Inputs.Path),
+        action: core.getInput(enum_1.Inputs.Action),
+        cacheKey: core.getInput(enum_1.Inputs.CacheKey) || 'no-key',
+        cacheDir: core.getInput(enum_1.Inputs.CacheDir),
+        workingDir: core.getInput(enum_1.Inputs.WorkingDir) || process.cwd()
     };
     if (!options.path) {
-        core.setFailed(logUtils_1.Log.error('path is required but was not provided.'));
+        core.setFailed(log_ultis_1.Log.error('path is required but was not provided.'));
     }
     if (!options.cacheKey) {
-        core.setFailed(logUtils_1.Log.error('cache-key is required but was not provided.'));
+        core.setFailed(log_ultis_1.Log.error('cache-key is required but was not provided.'));
     }
     if (!options.cacheDir) {
-        core.setFailed(logUtils_1.Log.error('cache-dir is required but was not provided.'));
+        core.setFailed(log_ultis_1.Log.error('cache-dir is required but was not provided.'));
     }
     const cachePath = path_1.default.join(options.cacheDir, options.cacheKey);
-    logUtils_1.Log.info(`Cache Path: ${cachePath}`);
+    log_ultis_1.Log.info(`Cache Path: ${cachePath}`);
     const { dir: cacheDir } = path_1.default.parse(cachePath);
-    logUtils_1.Log.info(`Cache Dir: ${cacheDir}`);
+    log_ultis_1.Log.info(`Cache Dir: ${cacheDir}`);
     const targetPath = path_1.default.join(options.workingDir, options.path);
-    logUtils_1.Log.info(`Target Path: ${targetPath}`);
+    log_ultis_1.Log.info(`Target Path: ${targetPath}`);
     const { dir: targetDir } = path_1.default.parse(targetPath);
-    logUtils_1.Log.info(`Target Dir: ${targetDir}`);
+    log_ultis_1.Log.info(`Target Dir: ${targetDir}`);
     return {
         options,
         cachePath,
         cacheDir,
         targetPath,
-        targetDir
+        targetDir,
+        workingDir: options.workingDir,
+        targetAction: options.action
     };
 };
 exports.getInputs = getInputs;
-const isCacheDirExist = async (path) => {
-    return new Promise((resolve, reject) => {
-        (0, child_process_1.exec)(`if [ -d "${path}" ]; then 
-          echo "1"; 
-        else 
-          echo "0"; 
-        fi`, (error, stdout, stderr) => {
-            if (error) {
-                return reject(error.message);
-            }
-            if (stdout.trim() === '1') {
-                return resolve(true);
-            }
-            resolve(false);
-        });
-    });
+const setOutput = (name, value) => {
+    return core.setOutput(name, value);
 };
-exports.isCacheDirExist = isCacheDirExist;
-const mkdir = async (path) => {
-    return new Promise((resolve, reject) => {
-        (0, child_process_1.exec)(`mkdir -p ${path}`, (error, stdout, stderr) => {
-            if (error) {
-                return reject(error.message);
-            }
-            resolve(stdout.trim());
-        });
-    });
+exports.setOutput = setOutput;
+const setFailed = (message) => {
+    core.setFailed(log_ultis_1.Log.error(message));
 };
-exports.mkdir = mkdir;
-const rsync = async (source, dest) => {
-    return new Promise((resolve, reject) => {
-        (0, child_process_1.exec)(`rsync -a ${source}/ ${dest}`, (error, stdout, stderr) => {
-            if (error) {
-                return reject(error.message);
-            }
-            resolve(stdout.trim());
-        });
-    });
-};
-exports.rsync = rsync;
-const exec = async (str) => {
+exports.setFailed = setFailed;
+
+
+/***/ }),
+
+/***/ 4947:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.exists = exports.rsync = exports.mkdir = exports.run = void 0;
+const child_process_1 = __nccwpck_require__(2081);
+const run = async (str) => {
     return new Promise((resolve, reject) => {
         (0, child_process_1.exec)(str, (error, stdout) => {
             if (error) {
                 return reject(error.message);
             }
-            resolve(stdout);
+            resolve(stdout.trim());
         });
     });
 };
-exports.exec = exec;
+exports.run = run;
+const mkdir = async (path) => {
+    return await (0, exports.run)(`mkdir -p ${path}`);
+};
+exports.mkdir = mkdir;
+const rsync = async (source, dest) => {
+    return await (0, exports.run)(`rsync -a ${source}/ ${dest}`);
+};
+exports.rsync = rsync;
+const exists = async (path) => {
+    const res = await (0, exports.run)(`if [ -d "${path}" ]; then 
+            echo "1"; 
+        else 
+            echo "0"; 
+        fi`);
+    return res === '1';
+};
+exports.exists = exists;
 
 
 /***/ }),
 
-/***/ 2585:
+/***/ 9857:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -26877,12 +26875,18 @@ module.exports = parseParams
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
 /******/ 	
 /************************************************************************/
-/******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __nccwpck_require__(5131);
-/******/ 	module.exports = __webpack_exports__;
-/******/ 	
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+(() => {
+"use strict";
+var exports = __webpack_exports__;
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const saveImpl_1 = __nccwpck_require__(6589);
+void (0, saveImpl_1.saveImpl)();
+
+})();
+
+module.exports = __webpack_exports__;
 /******/ })()
 ;
