@@ -24871,7 +24871,6 @@ const getInputs = async () => {
     const { dir: targetDir } = path_1.default.parse(targetPath);
     log_ultis_1.Log.info(`Target Dir: ${targetDir}`);
     return {
-        options,
         cachePath,
         cacheDir,
         targetPath,
