@@ -24775,14 +24775,14 @@ async function restoreImpl(isSkipSave = false) {
     try {
         const { cachePath, targetPath, cacheDir, targetDir, targetAction, workingDir } = await _action.getInputs();
         const isCacheExist = await _exec.exists(cachePath);
-        if (isCacheExist) {
-            log_ultis_1.Log.info('Cache exist, restore cache');
-            await _exec.mkdir(targetPath);
-            log_ultis_1.Log.info('Create target folder');
-            await _exec.rsync(cachePath, targetPath);
-            log_ultis_1.Log.info('Cache restore success');
-            return _action.setOutput(enum_1.Outputs.CacheHit, true);
-        }
+        // if (isCacheExist) {
+        //   Log.info('Cache exist, restore cache')
+        //   await _exec.mkdir(targetPath)
+        //   Log.info('Create target folder')
+        //   await _exec.rsync(cachePath, targetPath)
+        //   Log.info('Cache restore success')
+        //   return _action.setOutput(Outputs.CacheHit, true)
+        // }
         log_ultis_1.Log.info('Cache not exist, skip restore');
         if (!isSkipSave && !!targetAction) {
             log_ultis_1.Log.info('Run Action');
