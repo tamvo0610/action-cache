@@ -13,7 +13,8 @@ export enum State {
   TargetDir = 'TARGET_DIR',
   WorkingDir = 'WORKING_DIR',
   Action = 'ACTION',
-  Options = 'OPTIONS'
+  Options = 'OPTIONS',
+  PrimaryKey = 'PRIMARY_KEY'
 }
 
 export enum Outputs {

@@ -24726,6 +24726,7 @@ var State;
     State["WorkingDir"] = "WORKING_DIR";
     State["Action"] = "ACTION";
     State["Options"] = "OPTIONS";
+    State["PrimaryKey"] = "PRIMARY_KEY";
 })(State || (exports.State = State = {}));
 var Outputs;
 (function (Outputs) {
@@ -24771,9 +24772,9 @@ const enum_1 = __nccwpck_require__(5319);
 const _action = __importStar(__nccwpck_require__(9350));
 const _exec = __importStar(__nccwpck_require__(4947));
 const log_ultis_1 = __nccwpck_require__(9857);
-async function restoreImpl(isSkipSave = false) {
+async function restoreImpl(isSkipSave = true) {
     try {
-        const { cachePath, targetPath, cacheDir, targetDir, targetAction, workingDir } = await _action.getInputs();
+        const { cachePath, targetPath, cacheDir, targetDir, targetAction, workingDir } = _action.getInputs();
         const isCacheExist = await _exec.exists(cachePath);
         if (isCacheExist) {
             log_ultis_1.Log.info('Cache exist, restore cache');
@@ -24785,7 +24786,6 @@ async function restoreImpl(isSkipSave = false) {
         }
         log_ultis_1.Log.info('Cache not exist, skip restore');
         if (!isSkipSave && !!targetAction) {
-            //   Log.info('Run Action' + targetAction)
             await _exec.run(targetAction);
         }
         _action.setOutput(enum_1.Outputs.CacheHit, false);
@@ -24852,7 +24852,7 @@ const isErrorLike = (err) => {
     return false;
 };
 exports.isErrorLike = isErrorLike;
-const getInputs = async () => {
+const getInputs = () => {
     const options = {
         path: core.getInput(enum_1.Inputs.Path),
         action: core.getInput(enum_1.Inputs.Action),

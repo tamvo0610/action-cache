@@ -24726,6 +24726,7 @@ var State;
     State["WorkingDir"] = "WORKING_DIR";
     State["Action"] = "ACTION";
     State["Options"] = "OPTIONS";
+    State["PrimaryKey"] = "PRIMARY_KEY";
 })(State || (exports.State = State = {}));
 var Outputs;
 (function (Outputs) {
@@ -24845,7 +24846,7 @@ const isErrorLike = (err) => {
     return false;
 };
 exports.isErrorLike = isErrorLike;
-const getInputs = async () => {
+const getInputs = () => {
     const options = {
         path: core.getInput(enum_1.Inputs.Path),
         action: core.getInput(enum_1.Inputs.Action),

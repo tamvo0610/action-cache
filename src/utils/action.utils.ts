@@ -2,7 +2,6 @@ import * as core from '@actions/core'
 import path from 'path'
 import { Inputs } from 'src/constants/enum'
 import { Log } from './log.ultis'
-import { TState } from 'src/types/state.type'
 
 const has = <T extends Object>(obj: T, prop?: any) =>
   Object.prototype.hasOwnProperty.call(obj, prop)
@@ -25,7 +24,7 @@ export const isErrorLike = (err: any) => {
   return false
 }
 
-export const getInputs = async (): Promise<TState> => {
+export const getInputs = () => {
   const options = {
     path: core.getInput(Inputs.Path),
     action: core.getInput(Inputs.Action),
