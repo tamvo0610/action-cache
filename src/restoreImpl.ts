@@ -3,7 +3,7 @@ import * as _action from './utils/action.utils'
 import * as _exec from './utils/exec.utils'
 import { Log } from './utils/log.ultis'
 
-export async function restoreImpl() {
+export async function restoreImpl(isSkipSave = false) {
   try {
     const {
       cachePath,
@@ -23,7 +23,8 @@ export async function restoreImpl() {
       return _action.setOutput(Outputs.CacheHit, true)
     }
     Log.info('Cache not exist, skip restore')
-    if (!!targetAction) {
+    if (!isSkipSave && !!targetAction) {
+      Log.info('Run Action')
       await _exec.run(`cd ${workingDir} && ${targetAction}`)
     }
     _action.setOutput(Outputs.CacheHit, false)

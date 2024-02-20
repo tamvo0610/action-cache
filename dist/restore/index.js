@@ -24771,7 +24771,7 @@ const enum_1 = __nccwpck_require__(5319);
 const _action = __importStar(__nccwpck_require__(9350));
 const _exec = __importStar(__nccwpck_require__(4947));
 const log_ultis_1 = __nccwpck_require__(9857);
-async function restoreImpl() {
+async function restoreImpl(isSkipSave = false) {
     try {
         const { cachePath, targetPath, cacheDir, targetDir, targetAction, workingDir } = await _action.getInputs();
         const isCacheExist = await _exec.exists(cachePath);
@@ -24784,7 +24784,8 @@ async function restoreImpl() {
             return _action.setOutput(enum_1.Outputs.CacheHit, true);
         }
         log_ultis_1.Log.info('Cache not exist, skip restore');
-        if (!!targetAction) {
+        if (!isSkipSave && !!targetAction) {
+            log_ultis_1.Log.info('Run Action');
             await _exec.run(`cd ${workingDir} && ${targetAction}`);
         }
         _action.setOutput(enum_1.Outputs.CacheHit, false);
