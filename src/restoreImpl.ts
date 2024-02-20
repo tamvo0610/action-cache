@@ -25,9 +25,9 @@ export async function restoreImpl(isSkipSave = false) {
     Log.info('Cache not exist, skip restore')
     if (!isSkipSave && !!targetAction) {
       Log.info('Run Action' + targetAction)
-      await _exec.run(`cd ${workingDir} && ${targetAction}`)
+      await _exec.run(targetAction)
     }
-    _action.setOutput(Outputs.CacheHit, false)
+    // _action.setOutput(Outputs.CacheHit, false)
   } catch (error: any) {
     const errorMessage = _action.isErrorLike(error) ? error.message : error
     _action.setFailed(Log.error(errorMessage))

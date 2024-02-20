@@ -24767,7 +24767,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.restoreImpl = void 0;
-const enum_1 = __nccwpck_require__(5319);
 const _action = __importStar(__nccwpck_require__(9350));
 const _exec = __importStar(__nccwpck_require__(4947));
 const log_ultis_1 = __nccwpck_require__(9857);
@@ -24786,9 +24785,9 @@ async function restoreImpl(isSkipSave = false) {
         log_ultis_1.Log.info('Cache not exist, skip restore');
         if (!isSkipSave && !!targetAction) {
             log_ultis_1.Log.info('Run Action' + targetAction);
-            await _exec.run(`cd ${workingDir} && ${targetAction}`);
+            await _exec.run(targetAction);
         }
-        _action.setOutput(enum_1.Outputs.CacheHit, false);
+        // _action.setOutput(Outputs.CacheHit, false)
     }
     catch (error) {
         const errorMessage = _action.isErrorLike(error) ? error.message : error;
