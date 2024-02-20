@@ -3,7 +3,7 @@ import * as _action from './utils/action.utils'
 import * as _exec from './utils/exec.utils'
 import { Log } from './utils/log.ultis'
 
-export async function saveImpl() {
+export async function saveImpl(saveOnly = false) {
   try {
     const {
       cachePath,

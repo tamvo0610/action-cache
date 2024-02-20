@@ -24772,7 +24772,7 @@ const enum_1 = __nccwpck_require__(5319);
 const _action = __importStar(__nccwpck_require__(9350));
 const _exec = __importStar(__nccwpck_require__(4947));
 const log_ultis_1 = __nccwpck_require__(9857);
-async function saveImpl() {
+async function saveImpl(saveOnly = false) {
     try {
         const { cachePath, targetPath, cacheDir, targetDir, targetAction, workingDir } = _action.getInputs();
         const isCacheExist = await _exec.exists(cachePath);
