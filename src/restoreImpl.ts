@@ -24,7 +24,7 @@ export async function restoreImpl(isSkipSave = false) {
     // }
     Log.info('Cache not exist, skip restore')
     if (!isSkipSave && !!targetAction) {
-      Log.info('Run Action')
+      Log.info('Run Action' + targetAction)
       await _exec.run(`cd ${workingDir} && ${targetAction}`)
     }
     _action.setOutput(Outputs.CacheHit, false)

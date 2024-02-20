@@ -24785,7 +24785,7 @@ async function restoreImpl(isSkipSave = false) {
         // }
         log_ultis_1.Log.info('Cache not exist, skip restore');
         if (!isSkipSave && !!targetAction) {
-            log_ultis_1.Log.info('Run Action');
+            log_ultis_1.Log.info('Run Action' + targetAction);
             await _exec.run(`cd ${workingDir} && ${targetAction}`);
         }
         _action.setOutput(enum_1.Outputs.CacheHit, false);
