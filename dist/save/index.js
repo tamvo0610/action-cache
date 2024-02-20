@@ -24768,29 +24768,31 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.saveImpl = void 0;
+const enum_1 = __nccwpck_require__(5319);
 const _action = __importStar(__nccwpck_require__(9350));
 const _exec = __importStar(__nccwpck_require__(4947));
 const log_ultis_1 = __nccwpck_require__(9857);
 async function saveImpl() {
     try {
-        const { cachePath, targetPath, cacheDir, targetDir, targetAction, workingDir } = await _action.getInputs();
+        const { cachePath, targetPath, cacheDir, targetDir, targetAction, workingDir } = _action.getInputs();
         const isCacheExist = await _exec.exists(cachePath);
         if (isCacheExist) {
             log_ultis_1.Log.info('Cache exist, skip save');
-            return process.exit(0);
+            return _action.setOutput(enum_1.Outputs.CacheHit, true);
         }
         log_ultis_1.Log.info('Cache not exist, save cache');
         await _exec.mkdir(cachePath);
         log_ultis_1.Log.info('Create cache folder');
         await _exec.rsync(targetPath, cachePath);
         log_ultis_1.Log.info('Cache save success');
-        return process.exit(0);
+        _action.setOutput(enum_1.Outputs.CacheHit, false);
     }
     catch (error) {
         const errorMessage = _action.isErrorLike(error) ? error.message : error;
         _action.setFailed(log_ultis_1.Log.error(errorMessage));
         process.exit(1);
     }
+    process.exit(0);
 }
 exports.saveImpl = saveImpl;
 

@@ -24781,8 +24781,7 @@ async function restoreImpl(restoreOnly = false) {
             if (!restoreOnly && !!targetAction) {
                 await _exec.run(targetAction);
             }
-            _action.setOutput(enum_1.Outputs.CacheHit, false);
-            return process.exit(0);
+            return _action.setOutput(enum_1.Outputs.CacheHit, false);
         }
         log_ultis_1.Log.info('Cache exist, restore cache');
         await _exec.mkdir(targetPath);
@@ -24790,13 +24789,13 @@ async function restoreImpl(restoreOnly = false) {
         await _exec.rsync(cachePath, targetPath);
         log_ultis_1.Log.info('Cache restore success');
         _action.setOutput(enum_1.Outputs.CacheHit, true);
-        return process.exit(0);
     }
     catch (error) {
         const errorMessage = _action.isErrorLike(error) ? error.message : error;
         _action.setFailed(log_ultis_1.Log.error(errorMessage));
         process.exit(1);
     }
+    process.exit(0);
 }
 exports.restoreImpl = restoreImpl;
 
