@@ -24772,27 +24772,30 @@ const enum_1 = __nccwpck_require__(5319);
 const _action = __importStar(__nccwpck_require__(9350));
 const _exec = __importStar(__nccwpck_require__(4947));
 const log_ultis_1 = __nccwpck_require__(9857);
-async function restoreImpl(isSkipSave = true) {
+async function restoreImpl(restoreOnly = false) {
     try {
         const { cachePath, targetPath, cacheDir, targetDir, targetAction, workingDir } = _action.getInputs();
         const isCacheExist = await _exec.exists(cachePath);
-        if (isCacheExist) {
-            log_ultis_1.Log.info('Cache exist, restore cache');
-            await _exec.mkdir(targetPath);
-            log_ultis_1.Log.info('Create target folder');
-            await _exec.rsync(cachePath, targetPath);
-            log_ultis_1.Log.info('Cache restore success');
-            return _action.setOutput(enum_1.Outputs.CacheHit, true);
+        if (!isCacheExist) {
+            log_ultis_1.Log.info('Cache not exist, skip restore');
+            if (!restoreOnly && !!targetAction) {
+                await _exec.run(targetAction);
+            }
+            _action.setOutput(enum_1.Outputs.CacheHit, false);
+            return process.exit(0);
         }
-        log_ultis_1.Log.info('Cache not exist, skip restore');
-        if (!isSkipSave && !!targetAction) {
-            await _exec.run(targetAction);
-        }
-        _action.setOutput(enum_1.Outputs.CacheHit, false);
+        log_ultis_1.Log.info('Cache exist, restore cache');
+        await _exec.mkdir(targetPath);
+        log_ultis_1.Log.info('Create target folder');
+        await _exec.rsync(cachePath, targetPath);
+        log_ultis_1.Log.info('Cache restore success');
+        _action.setOutput(enum_1.Outputs.CacheHit, true);
+        return process.exit(0);
     }
     catch (error) {
         const errorMessage = _action.isErrorLike(error) ? error.message : error;
         _action.setFailed(log_ultis_1.Log.error(errorMessage));
+        process.exit(1);
     }
 }
 exports.restoreImpl = restoreImpl;

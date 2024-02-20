@@ -14,15 +14,18 @@ export async function saveImpl() {
     } = await _action.getInputs()
     const isCacheExist = await _exec.exists(cachePath)
     if (isCacheExist) {
-      return Log.info('Cache exist, skip save')
+      Log.info('Cache exist, skip save')
+      return process.exit(0)
     }
     Log.info('Cache not exist, save cache')
     await _exec.mkdir(cachePath)
     Log.info('Create cache folder')
     await _exec.rsync(targetPath, cachePath)
     Log.info('Cache save success')
+    return process.exit(0)
   } catch (error: any) {
     const errorMessage = _action.isErrorLike(error) ? error.message : error
     _action.setFailed(Log.error(errorMessage))
+    process.exit(1)
   }
 }

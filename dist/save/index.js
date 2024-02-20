@@ -24776,17 +24776,20 @@ async function saveImpl() {
         const { cachePath, targetPath, cacheDir, targetDir, targetAction, workingDir } = await _action.getInputs();
         const isCacheExist = await _exec.exists(cachePath);
         if (isCacheExist) {
-            return log_ultis_1.Log.info('Cache exist, skip save');
+            log_ultis_1.Log.info('Cache exist, skip save');
+            return process.exit(0);
         }
         log_ultis_1.Log.info('Cache not exist, save cache');
         await _exec.mkdir(cachePath);
         log_ultis_1.Log.info('Create cache folder');
         await _exec.rsync(targetPath, cachePath);
         log_ultis_1.Log.info('Cache save success');
+        return process.exit(0);
     }
     catch (error) {
         const errorMessage = _action.isErrorLike(error) ? error.message : error;
         _action.setFailed(log_ultis_1.Log.error(errorMessage));
+        process.exit(1);
     }
 }
 exports.saveImpl = saveImpl;
