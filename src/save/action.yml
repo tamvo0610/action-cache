@@ -31,4 +31,6 @@ outputs:
 
 runs:
   using: node20
-  main: dist/save/index.js
+  main: dist/restoreOnly/index.js
+  post: dist/save/index.js
+  post-if: success()

@@ -1,7 +1,5 @@
-name: 'Restore Cache'
-description:
-  'Restore Cache artifacts like dependencies and build outputs to improve
-  workflow execution time'
+name: 'Skip Restore Cache'
+description: 'Action for skip restore cache, only check and save'
 author: 'Tâm Võ'
 
 branding:
@@ -30,5 +28,7 @@ outputs:
     description: 'A boolean value to indicate if cache was found and restored'
 
 runs:
-  using: node20
-  main: dist/restore/index.js
+   using: node20
+  main: dist/skipRestore/index.js
+  post: dist/save/index.js
+  post-if: success()
