@@ -24864,8 +24864,8 @@ const getInputs = () => {
         cacheKey: core.getInput(enum_1.Inputs.CacheKey) || 'no-key',
         cacheDir: core.getInput(enum_1.Inputs.CacheDir),
         workingDir: core.getInput(enum_1.Inputs.WorkingDir) || process.cwd(),
-        restoreOnly: core.getInput(enum_1.Inputs.RestoreOnly),
-        saveOnly: core.getInput(enum_1.Inputs.SaveOnly)
+        restoreOnly: core.getBooleanInput(enum_1.Inputs.RestoreOnly),
+        saveOnly: core.getBooleanInput(enum_1.Inputs.SaveOnly)
     };
     if (!options.path) {
         core.setFailed(log_ultis_1.Log.error('path is required but was not provided.'));

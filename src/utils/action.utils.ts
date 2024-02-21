@@ -31,8 +31,8 @@ export const getInputs = () => {
     cacheKey: core.getInput(Inputs.CacheKey) || 'no-key',
     cacheDir: core.getInput(Inputs.CacheDir),
     workingDir: core.getInput(Inputs.WorkingDir) || process.cwd(),
-    restoreOnly: core.getInput(Inputs.RestoreOnly),
-    saveOnly: core.getInput(Inputs.SaveOnly)
+    restoreOnly: core.getBooleanInput(Inputs.RestoreOnly),
+    saveOnly: core.getBooleanInput(Inputs.SaveOnly)
   }
 
   if (!options.path) {
