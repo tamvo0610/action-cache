@@ -24787,7 +24787,7 @@ async function restoreImpl() {
         }
         if (options.saveOnly) {
             log_ultis_1.Log.info('Save only, skip restore');
-            return _action.setOutput(enum_1.Outputs.CacheHit, false);
+            return _action.setOutput(enum_1.Outputs.CacheHit, true);
         }
         log_ultis_1.Log.info('Cache exist, restore cache');
         await _exec.mkdir(targetPath);
