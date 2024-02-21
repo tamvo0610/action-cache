@@ -24716,6 +24716,8 @@ var Inputs;
     Inputs["CacheKey"] = "cache-key";
     Inputs["CacheDir"] = "cache-dir";
     Inputs["WorkingDir"] = "working-directory";
+    Inputs["SaveOnly"] = "save-only";
+    Inputs["RestoreOnly"] = "restore-only";
 })(Inputs || (exports.Inputs = Inputs = {}));
 var State;
 (function (State) {
@@ -24772,24 +24774,26 @@ const enum_1 = __nccwpck_require__(5319);
 const _action = __importStar(__nccwpck_require__(9350));
 const _exec = __importStar(__nccwpck_require__(4947));
 const log_ultis_1 = __nccwpck_require__(9857);
-async function restoreImpl(skipRestore = false) {
+async function restoreImpl() {
     try {
-        const { cachePath, targetPath } = _action.getInputs();
+        const { cachePath, targetPath, options } = _action.getInputs();
         const isCacheExist = await _exec.exists(cachePath);
         if (!isCacheExist) {
             log_ultis_1.Log.info('Cache not exist, skip restore');
-            // if (!options?.restoreOnly && !!targetAction) {
-            //   await _exec.run(targetAction)
-            // }
+            if (!!options.action) {
+                await _exec.run(options.action);
+            }
             return _action.setOutput(enum_1.Outputs.CacheHit, false);
         }
-        if (!skipRestore) {
-            log_ultis_1.Log.info('Cache exist, restore cache');
-            await _exec.mkdir(targetPath);
-            log_ultis_1.Log.info('Create target folder');
-            await _exec.rsync(cachePath, targetPath);
-            log_ultis_1.Log.info('Cache restore success');
+        if (options.saveOnly) {
+            log_ultis_1.Log.info('Save only, skip restore');
+            return _action.setOutput(enum_1.Outputs.CacheHit, false);
         }
+        log_ultis_1.Log.info('Cache exist, restore cache');
+        await _exec.mkdir(targetPath);
+        log_ultis_1.Log.info('Create target folder');
+        await _exec.rsync(cachePath, targetPath);
+        log_ultis_1.Log.info('Cache restore success');
         _action.setOutput(enum_1.Outputs.CacheHit, true);
     }
     catch (error) {
@@ -24862,7 +24866,9 @@ const getInputs = () => {
         action: core.getInput(enum_1.Inputs.Action),
         cacheKey: core.getInput(enum_1.Inputs.CacheKey) || 'no-key',
         cacheDir: core.getInput(enum_1.Inputs.CacheDir),
-        workingDir: core.getInput(enum_1.Inputs.WorkingDir) || process.cwd()
+        workingDir: core.getInput(enum_1.Inputs.WorkingDir) || process.cwd(),
+        restoreOnly: core.getInput(enum_1.Inputs.RestoreOnly),
+        saveOnly: core.getInput(enum_1.Inputs.SaveOnly)
     };
     if (!options.path) {
         core.setFailed(log_ultis_1.Log.error('path is required but was not provided.'));
@@ -24887,7 +24893,7 @@ const getInputs = () => {
         targetPath,
         targetDir,
         workingDir: options.workingDir,
-        targetAction: options.action
+        options
     };
 };
 exports.getInputs = getInputs;

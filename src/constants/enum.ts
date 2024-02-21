@@ -3,7 +3,9 @@ export enum Inputs {
   Action = 'action',
   CacheKey = 'cache-key',
   CacheDir = 'cache-dir',
-  WorkingDir = 'working-directory'
+  WorkingDir = 'working-directory',
+  SaveOnly = 'save-only',
+  RestoreOnly = 'restore-only'
 }
 
 export enum State {

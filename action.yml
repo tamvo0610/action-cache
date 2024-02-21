@@ -24,6 +24,14 @@ inputs:
   working-directory:
     description: 'Working directory'
     required: false
+  restore-only:
+    description: 'Restore only, skip save cache'
+    default: false
+    required: false
+  save-only:
+    description: 'Save only, skip restore cache'
+    default: false
+    required: false
 
 outputs:
   cache-hit:

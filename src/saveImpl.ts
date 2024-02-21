@@ -3,20 +3,17 @@ import * as _action from './utils/action.utils'
 import * as _exec from './utils/exec.utils'
 import { Log } from './utils/log.ultis'
 
-export async function saveImpl(saveOnly = false) {
+export async function saveImpl() {
   try {
-    const {
-      cachePath,
-      targetPath,
-      cacheDir,
-      targetDir,
-      targetAction,
-      workingDir
-    } = _action.getInputs()
+    const { cachePath, targetPath, options } = _action.getInputs()
     const isCacheExist = await _exec.exists(cachePath)
     if (isCacheExist) {
       Log.info('Cache exist, skip save')
       return _action.setOutput(Outputs.CacheHit, true)
+    }
+    if (options.restoreOnly) {
+      Log.info('Restore only, skip save')
+      return _action.setOutput(Outputs.CacheHit, false)
     }
     Log.info('Cache not exist, save cache')
     await _exec.mkdir(cachePath)

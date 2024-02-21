@@ -30,7 +30,9 @@ export const getInputs = () => {
     action: core.getInput(Inputs.Action),
     cacheKey: core.getInput(Inputs.CacheKey) || 'no-key',
     cacheDir: core.getInput(Inputs.CacheDir),
-    workingDir: core.getInput(Inputs.WorkingDir) || process.cwd()
+    workingDir: core.getInput(Inputs.WorkingDir) || process.cwd(),
+    restoreOnly: core.getInput(Inputs.RestoreOnly),
+    saveOnly: core.getInput(Inputs.SaveOnly)
   }
 
   if (!options.path) {
@@ -60,7 +62,7 @@ export const getInputs = () => {
     targetPath,
     targetDir,
     workingDir: options.workingDir,
-    targetAction: options.action
+    options
   }
 }
 
