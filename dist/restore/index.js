@@ -24785,10 +24785,10 @@ async function restoreImpl() {
             }
             return _action.setOutput(enum_1.Outputs.CacheHit, false);
         }
-        if (options.saveOnly) {
-            log_ultis_1.Log.info('Save only, skip restore');
-            return _action.setOutput(enum_1.Outputs.CacheHit, true);
-        }
+        // if (options.saveOnly) {
+        //   Log.info('Save only, skip restore')
+        //   return _action.setOutput(Outputs.CacheHit, true)
+        // }
         log_ultis_1.Log.info('Cache exist, restore cache');
         await _exec.mkdir(targetPath);
         log_ultis_1.Log.info('Create target folder');

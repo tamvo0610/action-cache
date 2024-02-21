@@ -14,10 +14,10 @@ export async function restoreImpl() {
       }
       return _action.setOutput(Outputs.CacheHit, false)
     }
-    if (options.saveOnly) {
-      Log.info('Save only, skip restore')
-      return _action.setOutput(Outputs.CacheHit, true)
-    }
+    // if (options.saveOnly) {
+    //   Log.info('Save only, skip restore')
+    //   return _action.setOutput(Outputs.CacheHit, true)
+    // }
     Log.info('Cache exist, restore cache')
     await _exec.mkdir(targetPath)
     Log.info('Create target folder')

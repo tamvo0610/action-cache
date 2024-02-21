@@ -11,10 +11,10 @@ export async function saveImpl() {
       Log.info('Cache exist, skip save')
       return _action.setOutput(Outputs.CacheHit, true)
     }
-    if (options.restoreOnly) {
-      Log.info('Restore only, skip save')
-      return _action.setOutput(Outputs.CacheHit, false)
-    }
+    // if (options.restoreOnly) {
+    //   Log.info('Restore only, skip save')
+    //   return _action.setOutput(Outputs.CacheHit, false)
+    // }
     Log.info('Cache not exist, save cache')
     await _exec.mkdir(cachePath)
     Log.info('Create cache folder')
