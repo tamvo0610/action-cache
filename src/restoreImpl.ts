@@ -15,7 +15,8 @@ export async function restoreImpl() {
       return _action.setOutput(Outputs.CacheHit, false)
     }
     if (options.saveOnly) {
-      return Log.info('Save only, skip restore')
+      Log.info('Save only, skip restore')
+      return _action.setOutput(Outputs.CacheHit, true)
     }
     Log.info('Cache exist, restore cache')
     await _exec.mkdir(targetPath)

@@ -24729,8 +24729,6 @@ var State;
     State["Action"] = "ACTION";
     State["Options"] = "OPTIONS";
     State["PrimaryKey"] = "PRIMARY_KEY";
-    State["RestoreOnly"] = "RESTORE_ONLY";
-    State["SaveOnly"] = "SAVE_ONLY";
 })(State || (exports.State = State = {}));
 var Outputs;
 (function (Outputs) {
@@ -24788,7 +24786,8 @@ async function restoreImpl() {
             return _action.setOutput(enum_1.Outputs.CacheHit, false);
         }
         if (options.saveOnly) {
-            return log_ultis_1.Log.info('Save only, skip restore');
+            log_ultis_1.Log.info('Save only, skip restore');
+            return _action.setOutput(enum_1.Outputs.CacheHit, true);
         }
         log_ultis_1.Log.info('Cache exist, restore cache');
         await _exec.mkdir(targetPath);
