@@ -73,3 +73,11 @@ export const setOutput = (name: string, value: any) => {
 export const setFailed = (message: string) => {
   core.setFailed(Log.error(message))
 }
+
+export const setState = <T>(name: string, value: T) => {
+  return core.saveState(name, value)
+}
+
+export const getState = <T>(name: string) => {
+  return JSON.parse(core.getState(name)) as T
+}

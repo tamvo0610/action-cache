@@ -1,4 +1,4 @@
-import { Outputs } from './constants/enum'
+import { Outputs, State } from './constants/enum'
 import * as _action from './utils/action.utils'
 import * as _exec from './utils/exec.utils'
 import { Log } from './utils/log.ultis'
@@ -11,10 +11,9 @@ export async function saveImpl() {
       Log.info('Cache exist, skip save')
       return _action.setOutput(Outputs.CacheHit, true)
     }
-    // if (options.restoreOnly) {
-    //   Log.info('Restore only, skip save')
-    //   return _action.setOutput(Outputs.CacheHit, false)
-    // }
+    if (options.restoreOnly) {
+      return Log.info('Restore only, skip save')
+    }
     Log.info('Cache not exist, save cache')
     await _exec.mkdir(cachePath)
     Log.info('Create cache folder')

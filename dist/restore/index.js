@@ -24729,6 +24729,8 @@ var State;
     State["Action"] = "ACTION";
     State["Options"] = "OPTIONS";
     State["PrimaryKey"] = "PRIMARY_KEY";
+    State["RestoreOnly"] = "RESTORE_ONLY";
+    State["SaveOnly"] = "SAVE_ONLY";
 })(State || (exports.State = State = {}));
 var Outputs;
 (function (Outputs) {
@@ -24785,10 +24787,9 @@ async function restoreImpl() {
             }
             return _action.setOutput(enum_1.Outputs.CacheHit, false);
         }
-        // if (options.saveOnly) {
-        //   Log.info('Save only, skip restore')
-        //   return _action.setOutput(Outputs.CacheHit, true)
-        // }
+        if (options.saveOnly) {
+            return log_ultis_1.Log.info('Save only, skip restore');
+        }
         log_ultis_1.Log.info('Cache exist, restore cache');
         await _exec.mkdir(targetPath);
         log_ultis_1.Log.info('Create target folder');
@@ -24840,7 +24841,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.setFailed = exports.setOutput = exports.getInputs = exports.isErrorLike = void 0;
+exports.getState = exports.setState = exports.setFailed = exports.setOutput = exports.getInputs = exports.isErrorLike = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const path_1 = __importDefault(__nccwpck_require__(1017));
 const enum_1 = __nccwpck_require__(5319);
@@ -24905,6 +24906,14 @@ const setFailed = (message) => {
     core.setFailed(log_ultis_1.Log.error(message));
 };
 exports.setFailed = setFailed;
+const setState = (name, value) => {
+    return core.saveState(name, value);
+};
+exports.setState = setState;
+const getState = (name) => {
+    return JSON.parse(core.getState(name));
+};
+exports.getState = getState;
 
 
 /***/ }),

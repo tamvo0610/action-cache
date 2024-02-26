@@ -1,4 +1,4 @@
-import { Outputs } from './constants/enum'
+import { Outputs, State } from './constants/enum'
 import * as _action from './utils/action.utils'
 import * as _exec from './utils/exec.utils'
 import { Log } from './utils/log.ultis'
@@ -14,10 +14,9 @@ export async function restoreImpl() {
       }
       return _action.setOutput(Outputs.CacheHit, false)
     }
-    // if (options.saveOnly) {
-    //   Log.info('Save only, skip restore')
-    //   return _action.setOutput(Outputs.CacheHit, true)
-    // }
+    if (options.saveOnly) {
+      return Log.info('Save only, skip restore')
+    }
     Log.info('Cache exist, restore cache')
     await _exec.mkdir(targetPath)
     Log.info('Create target folder')
