@@ -24782,11 +24782,12 @@ async function saveImpl() {
             log_ultis_1.Log.info('Cache exist, skip save');
             return _action.setOutput(enum_1.Outputs.CacheHit, true);
         }
+        log_ultis_1.Log.info('Cache not exist');
         if (options.restoreOnly) {
             log_ultis_1.Log.info('Restore only, skip save');
             return _action.setOutput(enum_1.Outputs.CacheHit, false);
         }
-        log_ultis_1.Log.info('Cache not exist, save cache');
+        log_ultis_1.Log.info('Save cache');
         await _exec.mkdir(cachePath);
         log_ultis_1.Log.info('Create cache folder');
         await _exec.rsync(targetPath, cachePath);

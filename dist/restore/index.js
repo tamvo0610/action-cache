@@ -24785,11 +24785,12 @@ async function restoreImpl() {
             }
             return _action.setOutput(enum_1.Outputs.CacheHit, false);
         }
+        log_ultis_1.Log.info('Cache exist');
         if (options.saveOnly) {
             log_ultis_1.Log.info('Save only, skip restore');
             return _action.setOutput(enum_1.Outputs.CacheHit, true);
         }
-        log_ultis_1.Log.info('Cache exist, restore cache');
+        log_ultis_1.Log.info('Restore cache');
         await _exec.mkdir(targetPath);
         log_ultis_1.Log.info('Create target folder');
         await _exec.rsync(cachePath, targetPath);
