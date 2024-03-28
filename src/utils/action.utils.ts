@@ -1,7 +1,7 @@
 import * as core from '@actions/core'
-import { exec, execSync as execSyncCP } from 'child_process'
 import path from 'path'
-import { Log } from './logUtils'
+import { Inputs } from 'src/constants/enum'
+import { Log } from './log.ultis'
 
 const has = <T extends Object>(obj: T, prop?: any) =>
   Object.prototype.hasOwnProperty.call(obj, prop)
@@ -24,45 +24,15 @@ export const isErrorLike = (err: any) => {
   return false
 }
 
-export const runExec = async (str: string): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    exec(str, (error, stdout) => {
-      if (error) {
-        return reject(error.message)
-      }
-      resolve(stdout)
-    })
-  })
-}
-
-export const checkDirExist = async (path: string): Promise<boolean> => {
-  return new Promise((resolve, reject) => {
-    exec(
-      `if [ -d "${path}" ]; then 
-          echo "1"; 
-        else 
-          echo "0"; 
-        fi`,
-      (error, stdout, stderr) => {
-        if (error) {
-          return reject(error.message)
-        }
-        if (stdout.trim() === '1') {
-          return resolve(true)
-        }
-        resolve(false)
-      }
-    )
-  })
-}
-
-export const getVars = () => {
+export const getInputs = () => {
   const options = {
-    path: core.getInput('path'),
-    action: core.getInput('action'),
-    cacheKey: core.getInput('cache-key') || 'no-key',
-    cacheDir: core.getInput('cache-dir'),
-    workingDir: core.getInput('working-directory') || process.cwd()
+    path: core.getInput(Inputs.Path),
+    action: core.getInput(Inputs.Action),
+    cacheKey: core.getInput(Inputs.CacheKey) || 'no-key',
+    cacheDir: core.getInput(Inputs.CacheDir),
+    workingDir: core.getInput(Inputs.WorkingDir) || process.cwd(),
+    restoreOnly: core.getBooleanInput(Inputs.RestoreOnly),
+    saveOnly: core.getBooleanInput(Inputs.SaveOnly)
   }
 
   if (!options.path) {
@@ -87,18 +57,27 @@ export const getVars = () => {
   Log.info(`Target Dir: ${targetDir}`)
 
   return {
-    options,
     cachePath,
     cacheDir,
     targetPath,
-    targetDir
+    targetDir,
+    workingDir: options.workingDir,
+    options
   }
 }
 
-export const execSync = (str: string) => {
-  return execSyncCP(str, {
-    shell: 'true',
-    // stdio: 'inherit',
-    encoding: 'utf-8'
-  })
+export const setOutput = (name: string, value: any) => {
+  return core.setOutput(name, value)
+}
+
+export const setFailed = (message: string) => {
+  core.setFailed(Log.error(message))
+}
+
+export const setState = <T>(name: string, value: T) => {
+  return core.saveState(name, value)
+}
+
+export const getState = <T>(name: string) => {
+  return JSON.parse(core.getState(name)) as T
 }

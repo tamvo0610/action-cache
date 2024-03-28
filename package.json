@@ -11,10 +11,11 @@
   "keywords": [
     "actions",
     "node",
+    "self-hosted",
     "setup"
   ],
   "engines": {
-    "node": ">=20"
+    "node": "^18.12.0"
   },
   "scripts": {
     "bundle": "npm run format:write && npm run package",

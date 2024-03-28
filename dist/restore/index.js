@@ -24702,7 +24702,45 @@ exports["default"] = _default;
 
 /***/ }),
 
-/***/ 4095:
+/***/ 5319:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Outputs = exports.State = exports.Inputs = void 0;
+var Inputs;
+(function (Inputs) {
+    Inputs["Path"] = "path";
+    Inputs["Action"] = "action";
+    Inputs["CacheKey"] = "cache-key";
+    Inputs["CacheDir"] = "cache-dir";
+    Inputs["WorkingDir"] = "working-directory";
+    Inputs["SaveOnly"] = "save-only";
+    Inputs["RestoreOnly"] = "restore-only";
+})(Inputs || (exports.Inputs = Inputs = {}));
+var State;
+(function (State) {
+    State["CachePath"] = "CACHE_PATH";
+    State["CacheDir"] = "CACHE_DIR";
+    State["TargetPath"] = "TARGET_PATH";
+    State["TargetDir"] = "TARGET_DIR";
+    State["WorkingDir"] = "WORKING_DIR";
+    State["Action"] = "ACTION";
+    State["Options"] = "OPTIONS";
+    State["PrimaryKey"] = "PRIMARY_KEY";
+})(State || (exports.State = State = {}));
+var Outputs;
+(function (Outputs) {
+    Outputs["CacheHit"] = "cache-hit";
+    Outputs["CachePrimaryKey"] = "cache-primary-key";
+    Outputs["CacheMatchedKey"] = "cache-matched-key"; // Output from restore action
+})(Outputs || (exports.Outputs = Outputs = {}));
+
+
+/***/ }),
+
+/***/ 2357:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -24731,40 +24769,47 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core = __importStar(__nccwpck_require__(2186));
-const actionUtils_1 = __nccwpck_require__(6850);
-const logUtils_1 = __nccwpck_require__(2585);
-async function restore() {
+exports.restoreImpl = void 0;
+const enum_1 = __nccwpck_require__(5319);
+const _action = __importStar(__nccwpck_require__(9350));
+const _exec = __importStar(__nccwpck_require__(4947));
+const log_ultis_1 = __nccwpck_require__(9857);
+async function restoreImpl() {
     try {
-        const { cachePath, targetDir, options } = (0, actionUtils_1.getVars)();
-        const isCacheExist = await (0, actionUtils_1.checkDirExist)(cachePath);
-        if (isCacheExist) {
-            logUtils_1.Log.info('Cache exist, restore cache');
-            await (0, actionUtils_1.runExec)(`mkdir -p ${targetDir}`);
-            logUtils_1.Log.info('Create target folder');
-            await (0, actionUtils_1.runExec)(`rsync -a ${cachePath}/ ${targetDir}`);
-            logUtils_1.Log.info('Cache restore success');
-            core.setOutput('cache-hit', true);
-        }
-        else {
-            logUtils_1.Log.info('Cache not exist, skip restore');
-            if (!!options?.action) {
-                await (0, actionUtils_1.runExec)(`cd ${options.workingDir} && ${options.action}`);
+        const { cachePath, targetPath, options } = _action.getInputs();
+        const isCacheExist = await _exec.exists(cachePath);
+        if (!isCacheExist) {
+            log_ultis_1.Log.info('Cache not exist, skip restore');
+            if (!!options.action) {
+                await _exec.run(options.action);
             }
-            core.setOutput('cache-hit', false);
+            return _action.setOutput(enum_1.Outputs.CacheHit, false);
         }
+        log_ultis_1.Log.info('Cache exist');
+        if (options.saveOnly) {
+            log_ultis_1.Log.info('Save only, skip restore');
+            return _action.setOutput(enum_1.Outputs.CacheHit, true);
+        }
+        log_ultis_1.Log.info('Restore cache');
+        await _exec.mkdir(targetPath);
+        log_ultis_1.Log.info('Create target folder');
+        await _exec.rsync(cachePath, targetPath);
+        log_ultis_1.Log.info('Cache restore success');
+        _action.setOutput(enum_1.Outputs.CacheHit, true);
     }
     catch (error) {
-        const errorMessage = (0, actionUtils_1.isErrorLike)(error) ? error.message : error;
-        core.setFailed(logUtils_1.Log.error(errorMessage));
+        const errorMessage = _action.isErrorLike(error) ? error.message : error;
+        _action.setFailed(log_ultis_1.Log.error(errorMessage));
+        process.exit(1);
     }
+    process.exit(0);
 }
-void restore();
+exports.restoreImpl = restoreImpl;
 
 
 /***/ }),
 
-/***/ 6850:
+/***/ 9350:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -24796,11 +24841,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.execSync = exports.getVars = exports.checkDirExist = exports.runExec = exports.isErrorLike = void 0;
+exports.getState = exports.setState = exports.setFailed = exports.setOutput = exports.getInputs = exports.isErrorLike = void 0;
 const core = __importStar(__nccwpck_require__(2186));
-const child_process_1 = __nccwpck_require__(2081);
 const path_1 = __importDefault(__nccwpck_require__(1017));
-const logUtils_1 = __nccwpck_require__(2585);
+const enum_1 = __nccwpck_require__(5319);
+const log_ultis_1 = __nccwpck_require__(9857);
 const has = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop);
 const isErrorLike = (err) => {
     if (err instanceof Error) {
@@ -24816,96 +24861,150 @@ const isErrorLike = (err) => {
     return false;
 };
 exports.isErrorLike = isErrorLike;
-const runExec = async (str) => {
+const getInputs = () => {
+    const options = {
+        path: core.getInput(enum_1.Inputs.Path),
+        action: core.getInput(enum_1.Inputs.Action),
+        cacheKey: core.getInput(enum_1.Inputs.CacheKey) || 'no-key',
+        cacheDir: core.getInput(enum_1.Inputs.CacheDir),
+        workingDir: core.getInput(enum_1.Inputs.WorkingDir) || process.cwd(),
+        restoreOnly: core.getBooleanInput(enum_1.Inputs.RestoreOnly),
+        saveOnly: core.getBooleanInput(enum_1.Inputs.SaveOnly)
+    };
+    if (!options.path) {
+        core.setFailed(log_ultis_1.Log.error('path is required but was not provided.'));
+    }
+    if (!options.cacheKey) {
+        core.setFailed(log_ultis_1.Log.error('cache-key is required but was not provided.'));
+    }
+    if (!options.cacheDir) {
+        core.setFailed(log_ultis_1.Log.error('cache-dir is required but was not provided.'));
+    }
+    const cachePath = path_1.default.join(options.cacheDir, options.cacheKey);
+    log_ultis_1.Log.info(`Cache Path: ${cachePath}`);
+    const { dir: cacheDir } = path_1.default.parse(cachePath);
+    log_ultis_1.Log.info(`Cache Dir: ${cacheDir}`);
+    const targetPath = path_1.default.join(options.workingDir, options.path);
+    log_ultis_1.Log.info(`Target Path: ${targetPath}`);
+    const { dir: targetDir } = path_1.default.parse(targetPath);
+    log_ultis_1.Log.info(`Target Dir: ${targetDir}`);
+    return {
+        cachePath,
+        cacheDir,
+        targetPath,
+        targetDir,
+        workingDir: options.workingDir,
+        options
+    };
+};
+exports.getInputs = getInputs;
+const setOutput = (name, value) => {
+    return core.setOutput(name, value);
+};
+exports.setOutput = setOutput;
+const setFailed = (message) => {
+    core.setFailed(log_ultis_1.Log.error(message));
+};
+exports.setFailed = setFailed;
+const setState = (name, value) => {
+    return core.saveState(name, value);
+};
+exports.setState = setState;
+const getState = (name) => {
+    return JSON.parse(core.getState(name));
+};
+exports.getState = getState;
+
+
+/***/ }),
+
+/***/ 4947:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.exists = exports.rsync = exports.mkdir = exports.run = void 0;
+const child_process_1 = __nccwpck_require__(2081);
+const run = async (str) => {
     return new Promise((resolve, reject) => {
         (0, child_process_1.exec)(str, (error, stdout) => {
             if (error) {
                 return reject(error.message);
             }
-            resolve(stdout);
+            resolve(stdout.trim());
         });
     });
 };
-exports.runExec = runExec;
-const checkDirExist = async (path) => {
-    return new Promise((resolve, reject) => {
-        (0, child_process_1.exec)(`if [ -d "${path}" ]; then 
-          echo "1"; 
+exports.run = run;
+const mkdir = async (path) => {
+    return await (0, exports.run)(`mkdir -p ${path}`);
+};
+exports.mkdir = mkdir;
+const rsync = async (source, dest) => {
+    return await (0, exports.run)(`rsync -a ${source}/ ${dest}`);
+};
+exports.rsync = rsync;
+const exists = async (path) => {
+    const res = await (0, exports.run)(`if [ -d "${path}" ]; then 
+            echo "1"; 
         else 
-          echo "0"; 
-        fi`, (error, stdout, stderr) => {
-            if (error) {
-                return reject(error.message);
-            }
-            if (stdout.trim() === '1') {
-                return resolve(true);
-            }
-            resolve(false);
-        });
-    });
+            echo "0"; 
+        fi`);
+    return res === '1';
 };
-exports.checkDirExist = checkDirExist;
-const getVars = () => {
-    const options = {
-        path: core.getInput('path'),
-        action: core.getInput('action'),
-        cacheKey: core.getInput('cache-key') || 'no-key',
-        cacheDir: core.getInput('cache-dir'),
-        workingDir: core.getInput('working-directory') || process.cwd()
-    };
-    if (!options.path) {
-        core.setFailed(logUtils_1.Log.error('path is required but was not provided.'));
-    }
-    if (!options.cacheKey) {
-        core.setFailed(logUtils_1.Log.error('cache-key is required but was not provided.'));
-    }
-    if (!options.cacheDir) {
-        core.setFailed(logUtils_1.Log.error('cache-dir is required but was not provided.'));
-    }
-    const cachePath = path_1.default.join(options.cacheDir, options.cacheKey);
-    logUtils_1.Log.info(`Cache Path: ${cachePath}`);
-    const { dir: cacheDir } = path_1.default.parse(cachePath);
-    logUtils_1.Log.info(`Cache Dir: ${cacheDir}`);
-    const targetPath = path_1.default.join(options.workingDir, options.path);
-    logUtils_1.Log.info(`Target Path: ${targetPath}`);
-    const { dir: targetDir } = path_1.default.parse(targetPath);
-    logUtils_1.Log.info(`Target Dir: ${targetDir}`);
-    return {
-        options,
-        cachePath,
-        cacheDir,
-        targetPath,
-        targetDir
-    };
-};
-exports.getVars = getVars;
-const execSync = (str) => {
-    return (0, child_process_1.execSync)(str, {
-        shell: 'true',
-        // stdio: 'inherit',
-        encoding: 'utf-8'
-    });
-};
-exports.execSync = execSync;
+exports.exists = exists;
 
 
 /***/ }),
 
-/***/ 2585:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ 9857:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Log = void 0;
+const core = __importStar(__nccwpck_require__(2186));
 exports.Log = {
     info: (str) => {
-        console.log(`===== INFO: ${str}`);
+        core.info(`===== INFO: ${str}`);
         return `===== INFO: ${str}`;
     },
     error: (str) => {
-        console.log(`===== ERROR: ${str}`);
+        core.error(`===== ERROR: ${str}`);
         return `===== ERROR: ${str}`;
+    },
+    notice: (str) => {
+        core.notice(`===== NOTICE: ${str}`);
+        return `===== NOTICE: ${str}`;
+    },
+    warning: (str) => {
+        core.warning(`===== WARNING: ${str}`);
+        return `===== WARNING: ${str}`;
     }
 };
 
@@ -26801,12 +26900,18 @@ module.exports = parseParams
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
 /******/ 	
 /************************************************************************/
-/******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __nccwpck_require__(4095);
-/******/ 	module.exports = __webpack_exports__;
-/******/ 	
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+(() => {
+"use strict";
+var exports = __webpack_exports__;
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const restoreImpl_1 = __nccwpck_require__(2357);
+void (0, restoreImpl_1.restoreImpl)();
+
+})();
+
+module.exports = __webpack_exports__;
 /******/ })()
 ;
