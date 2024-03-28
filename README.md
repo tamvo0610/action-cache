@@ -28,3 +28,5 @@ Set input variable in secrets of your repository as below:
 | path | File or folder to be cached | ios/Podfile.lock |
 | cache-key | Explicit key for versioning the cache | pods-${{ hashFiles('ios/Podfile.lock') }} |
 | cache-dir | Path dir will cache | actions_runnder/_workdir/cache |
+| restore-only | Restore only, skip save cache | |
+| save-only | Save only, skip restore cache | |
