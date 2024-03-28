@@ -1,4 +1,4 @@
-import { Outputs, State } from './constants/enum'
+import { Outputs } from './constants/enum'
 import * as _action from './utils/action.utils'
 import * as _exec from './utils/exec.utils'
 import { Log } from './utils/log.ultis'
