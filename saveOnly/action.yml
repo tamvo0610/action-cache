@@ -1,0 +1,44 @@
+name: 'Local Cache Self-Hosted'
+description:
+  'Cache dependencies and build outputs to improve workflow execution time on
+  self hosted machine'
+author: 'Tâm Võ'
+
+branding:
+  icon: 'archive'
+  color: 'red'
+
+inputs:
+  path:
+    description: 'An explicit key for versioning the cache'
+    required: true
+  action:
+    description: 'The file or folder to be cached'
+    required: false
+  cache-key:
+    description: 'The path dir will cache'
+    required: true
+  cache-dir:
+    description: 'Action will be run if not cashed yet'
+    required: true
+  working-directory:
+    description: 'Working directory'
+    required: false
+  restore-only:
+    description: 'Restore only, skip save cache'
+    default: false
+    required: false
+  save-only:
+    description: 'Save only, skip restore cache'
+    default: false
+    required: false
+
+outputs:
+  cache-hit:
+    description: 'A boolean value to indicate if cache was found and restored'
+
+runs:
+  using: node20
+  main: dist/restore/index.js
+  post: dist/saveOnly/index.js
+  post-if: success()

@@ -24774,7 +24774,7 @@ const enum_1 = __nccwpck_require__(5319);
 const _action = __importStar(__nccwpck_require__(9350));
 const _exec = __importStar(__nccwpck_require__(4947));
 const log_ultis_1 = __nccwpck_require__(9857);
-async function saveImpl() {
+async function saveImpl(saveOnly = false) {
     try {
         const { cachePath, targetPath, options } = _action.getInputs();
         const isCacheExist = await _exec.exists(cachePath);
@@ -24783,7 +24783,7 @@ async function saveImpl() {
             return _action.setOutput(enum_1.Outputs.CacheHit, true);
         }
         log_ultis_1.Log.info('Cache not exist');
-        if (options.restoreOnly) {
+        if (saveOnly || options.restoreOnly) {
             log_ultis_1.Log.info('Restore only, skip save');
             return _action.setOutput(enum_1.Outputs.CacheHit, false);
         }

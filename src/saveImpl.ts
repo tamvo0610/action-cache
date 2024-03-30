@@ -3,7 +3,7 @@ import * as _action from './utils/action.utils'
 import * as _exec from './utils/exec.utils'
 import { Log } from './utils/log.ultis'
 
-export async function saveImpl() {
+export async function saveImpl(saveOnly = false) {
   try {
     const { cachePath, targetPath, options } = _action.getInputs()
     const isCacheExist = await _exec.exists(cachePath)
@@ -12,7 +12,7 @@ export async function saveImpl() {
       return _action.setOutput(Outputs.CacheHit, true)
     }
     Log.info('Cache not exist')
-    if (options.restoreOnly) {
+    if (saveOnly || options.restoreOnly) {
       Log.info('Restore only, skip save')
       return _action.setOutput(Outputs.CacheHit, false)
     }
